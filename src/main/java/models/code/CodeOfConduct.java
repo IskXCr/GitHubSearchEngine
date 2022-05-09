@@ -1,4 +1,4 @@
-package models;
+package models.code;
 
 import java.net.URI;
 import java.util.LinkedHashMap;

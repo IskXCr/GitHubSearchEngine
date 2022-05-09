@@ -1,5 +1,6 @@
 import repository.RepositoryAPI;
 import search.SearchAPI;
+import user.UserAPI;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,14 +15,16 @@ public class GitHubAPI {
 
     public final SearchAPI searchAPI;
     public final RepositoryAPI repositoryAPI;
+    public final UserAPI userAPI;
 
-    public GitHubAPI(String OAuthToken) {
+    GitHubAPI(String OAuthToken) {
         this.OAuthToken = new String(OAuthToken);
 
         client = HttpClient.newHttpClient();
 
         searchAPI = SearchAPI.registerAPI(OAuthToken);
         repositoryAPI = RepositoryAPI.registerAPI(OAuthToken);
+        userAPI = UserAPI.registerAPI(OAuthToken);
     }
 
     public String getRESTRawResponse(String requestURL) throws IOException, InterruptedException {
@@ -39,5 +42,9 @@ public class GitHubAPI {
             System.out.println("Error.");
         }
         return response;
+    }
+
+    public static GitHubAPI registerAPI(String OAuthToken) {
+        return new GitHubAPI(OAuthToken);
     }
 }

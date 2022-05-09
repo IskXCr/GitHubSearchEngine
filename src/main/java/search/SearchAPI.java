@@ -1,5 +1,9 @@
 package search;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import models.code.CodeResult;
+import search.requests.CodeSearchRequest;
 import search.requests.SearchRequest;
 
 import java.io.IOException;
@@ -14,11 +18,14 @@ public class SearchAPI {
 
     private final HttpClient client;
 
+    private final ObjectMapper objectMapper;
+
 //    private final HashMap<ETag, HttpResponse<String>> historyMap;
 
     SearchAPI(String OAuthToken) {
         this.OAuthToken = OAuthToken;
         client = HttpClient.newHttpClient();
+        objectMapper = new ObjectMapper();
 //        historyMap = new HashMap<>();
     }
 
@@ -30,8 +37,14 @@ public class SearchAPI {
         return search(request).body();
     }
 
+    public CodeResult searchCode(CodeSearchRequest request) throws IOException, InterruptedException {
+        String s = searchRaw(request);
+        CodeResult result = objectMapper.readValue(s, CodeResult.class);
+        return result;
+    }
+
     public HttpResponse<String> search(SearchRequest request) throws IOException, InterruptedException {
-        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3.text-match+json")
+        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3+json")
                 .uri(URI.create("https://api.github.com/search/" + request.getRequestString())).build();
         System.out.println("Sending search request: " + httpRequest.uri());
 
@@ -43,7 +56,18 @@ public class SearchAPI {
         return response;
     }
 
+
     public static SearchAPI registerAPI(String OAuthToken) {
         return new SearchAPI(OAuthToken);
+    }
+
+    public static CodeResult convert(String jsonContent) {
+        ObjectMapper objMpr = new ObjectMapper();
+        try {
+            return objMpr.readValue(jsonContent, CodeResult.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

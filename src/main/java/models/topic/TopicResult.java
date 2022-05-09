@@ -1,4 +1,5 @@
-package models.search.code;
+
+package models.topic;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "items"
 })
 @Generated("jsonschema2pojo")
-public class CodeResult {
+public class TopicResult {
 
     /**
      * 
@@ -41,7 +42,7 @@ public class CodeResult {
      * 
      */
     @JsonProperty("items")
-    private List<CodeResultItem> codeResultItems = new ArrayList<CodeResultItem>();
+    private List<Topic> topics = new ArrayList<Topic>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -91,8 +92,8 @@ public class CodeResult {
      * 
      */
     @JsonProperty("items")
-    public List<CodeResultItem> getItems() {
-        return codeResultItems;
+    public List<Topic> getItems() {
+        return topics;
     }
 
     /**
@@ -101,8 +102,8 @@ public class CodeResult {
      * 
      */
     @JsonProperty("items")
-    public void setItems(List<CodeResultItem> codeResultItems) {
-        this.codeResultItems = codeResultItems;
+    public void setItems(List<Topic> topics) {
+        this.topics = topics;
     }
 
     @JsonAnyGetter
@@ -118,7 +119,7 @@ public class CodeResult {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeResult.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append(TopicResult.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("totalCount");
         sb.append('=');
         sb.append(((this.totalCount == null)?"<null>":this.totalCount));
@@ -129,7 +130,7 @@ public class CodeResult {
         sb.append(',');
         sb.append("items");
         sb.append('=');
-        sb.append(((this.codeResultItems == null)?"<null>":this.codeResultItems));
+        sb.append(((this.topics == null)?"<null>":this.topics));
         sb.append(',');
         sb.append("additionalProperties");
         sb.append('=');
@@ -149,7 +150,7 @@ public class CodeResult {
         result = ((result* 31)+((this.incompleteResults == null)? 0 :this.incompleteResults.hashCode()));
         result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.totalCount == null)? 0 :this.totalCount.hashCode()));
-        result = ((result* 31)+((this.codeResultItems == null)? 0 :this.codeResultItems.hashCode()));
+        result = ((result* 31)+((this.topics == null)? 0 :this.topics.hashCode()));
         return result;
     }
 
@@ -158,11 +159,11 @@ public class CodeResult {
         if (other == this) {
             return true;
         }
-        if ((other instanceof CodeResult) == false) {
+        if ((other instanceof TopicResult) == false) {
             return false;
         }
-        CodeResult rhs = ((CodeResult) other);
-        return (((((this.incompleteResults == rhs.incompleteResults)||((this.incompleteResults!= null)&&this.incompleteResults.equals(rhs.incompleteResults)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.totalCount == rhs.totalCount)||((this.totalCount!= null)&&this.totalCount.equals(rhs.totalCount))))&&((this.codeResultItems == rhs.codeResultItems)||((this.codeResultItems != null)&&this.codeResultItems.equals(rhs.codeResultItems))));
+        TopicResult rhs = ((TopicResult) other);
+        return (((((this.incompleteResults == rhs.incompleteResults)||((this.incompleteResults!= null)&&this.incompleteResults.equals(rhs.incompleteResults)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.totalCount == rhs.totalCount)||((this.totalCount!= null)&&this.totalCount.equals(rhs.totalCount))))&&((this.topics == rhs.topics)||((this.topics != null)&&this.topics.equals(rhs.topics))));
     }
 
 }

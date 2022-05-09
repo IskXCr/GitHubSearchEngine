@@ -1,4 +1,4 @@
-package models.search.code;
+package models.code;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import models.Repository;
+import models.repository.Repository;
 import models.TextMatch;
 
 
@@ -41,7 +41,7 @@ import models.TextMatch;
     "text_matches"
 })
 @Generated("jsonschema2pojo")
-public class CodeResultItem {
+public class CodeItem {
 
     /**
      * 
@@ -360,7 +360,7 @@ public class CodeResultItem {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeResultItem.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append(CodeItem.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("name");
         sb.append('=');
         sb.append(((this.name == null)?"<null>":this.name));
@@ -450,10 +450,10 @@ public class CodeResultItem {
         if (other == this) {
             return true;
         }
-        if ((other instanceof CodeResultItem) == false) {
+        if ((other instanceof CodeItem) == false) {
             return false;
         }
-        CodeResultItem rhs = ((CodeResultItem) other);
+        CodeItem rhs = ((CodeItem) other);
         return (((((((((((((((this.lineNumbers == rhs.lineNumbers)||((this.lineNumbers!= null)&&this.lineNumbers.equals(rhs.lineNumbers)))&&((this.lastModifiedAt == rhs.lastModifiedAt)||((this.lastModifiedAt!= null)&&this.lastModifiedAt.equals(rhs.lastModifiedAt))))&&((this.htmlUrl == rhs.htmlUrl)||((this.htmlUrl!= null)&&this.htmlUrl.equals(rhs.htmlUrl))))&&((this.textMatches == rhs.textMatches)||((this.textMatches!= null)&&this.textMatches.equals(rhs.textMatches))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.repository == rhs.repository)||((this.repository!= null)&&this.repository.equals(rhs.repository))))&&((this.sha == rhs.sha)||((this.sha!= null)&&this.sha.equals(rhs.sha))))&&((this.url == rhs.url)||((this.url!= null)&&this.url.equals(rhs.url))))&&((this.path == rhs.path)||((this.path!= null)&&this.path.equals(rhs.path))))&&((this.score == rhs.score)||((this.score!= null)&&this.score.equals(rhs.score))))&&((this.fileSize == rhs.fileSize)||((this.fileSize!= null)&&this.fileSize.equals(rhs.fileSize))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.gitUrl == rhs.gitUrl)||((this.gitUrl!= null)&&this.gitUrl.equals(rhs.gitUrl))));
     }
 

@@ -100,6 +100,7 @@ public class CodeSearchRequest extends SearchRequest {
 
         /**
          * Search files only under the specific path in the corresponding repository.
+         *
          * @param path path
          * @return
          */
@@ -221,7 +222,12 @@ public class CodeSearchRequest extends SearchRequest {
                     .append(qualifierRepoOption)
                     .append(qualifierDateOption)
                     .append(sort == Sort.Indexed ? "sort:indexed" : "")
-                    .append(order == Order.Ascending ? "order:asc" : ""); //default:desc
+                    .append(order == Order.Ascending ? "order:asc" : "");    //default:desc
+//                    .append("per_page:100");
+            if (queryBuilder.lastIndexOf("++") != -1) {
+                int index = queryBuilder.lastIndexOf("++");
+                queryBuilder.replace(index, index + 2, "+");
+            }
 
             CodeSearchRequest req = new CodeSearchRequest();
             StringBuilder reqBuilder = req.getRequestBuilder();
