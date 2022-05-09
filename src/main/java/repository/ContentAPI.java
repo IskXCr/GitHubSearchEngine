@@ -2,6 +2,8 @@ package repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.content.ContentDirectory;
+import models.content.ContentFile;
 import models.repository.Repository;
 
 import java.io.IOException;
@@ -32,10 +34,31 @@ public class ContentAPI {
         this(null);
     }
 
-    public HttpResponse<String> getRepositoryInfoDirect(URI uri) throws IOException, InterruptedException {
-        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3.text-match+json")
+    public ContentDirectory getContentDirectory(URI uri) throws IOException, InterruptedException {
+        return objectMapper.readValue(getContentDirect(uri).body(), ContentDirectory.class);
+    }
+
+    public ContentFile getContentFile(URI uri) throws IOException, InterruptedException {
+        return objectMapper.readValue(getContentDirect(uri).body(), ContentFile.class);
+    }
+
+    public String getContentRaw(Repository repo, String path) throws IOException, InterruptedException {
+        try {
+            return getContentRaw(new URI("https://api.github.com/repos/" + unwrapSlashes(repo.getFullName()) + "/contents" + (path.charAt(0) != '/' ? '/' + path : path)));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getContentRaw(URI uri) throws IOException, InterruptedException {
+        return getContentDirect(uri).body();
+    }
+
+    public HttpResponse<String> getContentDirect(URI uri) throws IOException, InterruptedException {
+        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3+json")
                 .uri(uri).build();
-        System.out.println("Sending repo request: " + httpRequest.uri());
+        System.out.println("Sending content request: " + httpRequest.uri());
 
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
@@ -47,13 +70,24 @@ public class ContentAPI {
         return new ContentAPI(OAuthToken);
     }
 
-//    public static Repository convert(String jsonContent) {
-//        ObjectMapper objMpr = new ObjectMapper();
-//        try {
-//            return objMpr.readValue(jsonContent, Repository.class);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public static <T> T convert(String jsonContent, Class<T> clazz) {
+        ObjectMapper objMpr = new ObjectMapper();
+        try {
+            return objMpr.readValue(jsonContent, clazz);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String unwrapSlashes(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        if (s.charAt(0) == '/') {
+            sb.deleteCharAt(0);
+        }
+        if (s.charAt(s.length() - 1) == '/') {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
 }

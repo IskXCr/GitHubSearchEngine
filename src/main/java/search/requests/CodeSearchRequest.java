@@ -2,6 +2,7 @@ package search.requests;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -157,45 +158,25 @@ public class CodeSearchRequest extends SearchRequest {
             return this;
         }
 
-        /**
-         * Set the qualifier to match the code on the specified day
-         *
-         * @param date YYYY-MM-DD
-         * @return This builder.
-         */
-        public RequestBuilder addDateOption(String date) {
-            qualifierDateOption.append("created:").append(date).append(" ");
-            return this;
-        }
-
-        /**
-         * @param date Date
-         * @return This builder.
-         */
-        public RequestBuilder addDateOption(ZonedDateTime date) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            qualifierDateOption.append("created:").append(date.format(formatter)).append(" ");
-            return this;
-        }
 
         /**
          * @param date     YYYY-MM-DD
-         * @param modifier can be one of <code>>,>=,<=,<</code>
+         * @param modifier can be one of <code>>,>=,<=,<,null</code>
          * @return This builder.
          */
         public RequestBuilder addDateOption(String date, String modifier) {
-            qualifierDateOption.append("created:" + modifier + date + " ");
+            qualifierDateOption.append("created:").append(modifier == null ? "" : modifier).append(date).append(" ");
             return this;
         }
 
         /**
          * @param date     Date
-         * @param modifier can be one of <code>>,>=,<=,<</code>
+         * @param modifier can be one of <code>>,>=,<=,<,null</code>
          * @return This builder.
          */
         public RequestBuilder addDateOption(ZonedDateTime date, String modifier) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            qualifierDateOption.append("created:").append(modifier).append(date.format(formatter)).append(" ");
+            qualifierDateOption.append("created:").append(modifier == null ? "" : modifier).append(date.format(formatter)).append(" ");
             return this;
         }
 
@@ -231,12 +212,7 @@ public class CodeSearchRequest extends SearchRequest {
 
             CodeSearchRequest req = new CodeSearchRequest();
             StringBuilder reqBuilder = req.getRequestBuilder();
-            try {
-                reqBuilder.append("code?q=").append(URLEncoder.encode(queryBuilder.toString(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                System.out.println(this.getClass() + ": Results are ignored. Empty request is made.");
-            }
+            reqBuilder.append("code?q=").append(URLEncoder.encode(queryBuilder.toString(), StandardCharsets.UTF_8));
             return req;
         }
 

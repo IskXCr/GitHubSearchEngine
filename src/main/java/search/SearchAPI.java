@@ -11,6 +11,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
+import java.util.concurrent.TimeUnit;
 
 public class SearchAPI {
 
@@ -33,21 +36,20 @@ public class SearchAPI {
         this(null);
     }
 
-    public String searchRaw(SearchRequest request) throws IOException, InterruptedException {
-        return search(request).body();
-    }
-
     public CodeResult searchCode(CodeSearchRequest request) throws IOException, InterruptedException {
-        String s = searchRaw(request);
+        String s = searchCodeRaw(request);
         CodeResult result = objectMapper.readValue(s, CodeResult.class);
         return result;
     }
 
+    public String searchCodeRaw(SearchRequest request) throws IOException, InterruptedException {
+        return search(request).body();
+    }
+
     public HttpResponse<String> search(SearchRequest request) throws IOException, InterruptedException {
         HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3+json")
-                .uri(URI.create("https://api.github.com/search/" + request.getRequestString())).build();
+                .uri(URI.create("https://api.github.com/search/" + request.getRequestString())).timeout(Duration.ofSeconds(10)).build();
         System.out.println("Sending search request: " + httpRequest.uri());
-
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
             System.out.println("Error. Http response info returned:");

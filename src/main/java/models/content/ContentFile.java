@@ -2,6 +2,7 @@
 package models.content;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.processing.Generated;
@@ -130,6 +131,19 @@ public class ContentFile {
     private String submoduleGitUrl;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+
+
+    public URI getRawFileURI(){
+        String s = htmlUrl.toString();
+        s = s.replaceFirst("/blob","");
+        s = s.replaceFirst("github.com", "raw.githubusercontent.com");
+        try {
+            return new URI(s);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null; //Which shouldn't happen.
+    }
 
     /**
      * 

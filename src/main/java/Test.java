@@ -22,7 +22,7 @@ public class Test {
 
 
         CodeSearchRequest req = CodeSearchRequest.newBuilder()
-                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml").build();
+                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml").addLanguageOption("Maven POM").build();
 
         String s = Files.readString(Path.of("result.json"));
 

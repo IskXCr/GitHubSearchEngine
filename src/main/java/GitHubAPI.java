@@ -1,3 +1,5 @@
+import repository.ContentAPI;
+import repository.FileAPI;
 import repository.RepositoryAPI;
 import search.SearchAPI;
 import user.UserAPI;
@@ -7,8 +9,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class GitHubAPI {
+
+    public static final Duration timeout = Duration.ofSeconds(10);
 
     private final String OAuthToken;
     private final HttpClient client;
@@ -16,6 +21,8 @@ public class GitHubAPI {
     public final SearchAPI searchAPI;
     public final RepositoryAPI repositoryAPI;
     public final UserAPI userAPI;
+    public final ContentAPI contentAPI;
+    public final FileAPI fileAPI;
 
     GitHubAPI(String OAuthToken) {
         this.OAuthToken = new String(OAuthToken);
@@ -25,6 +32,8 @@ public class GitHubAPI {
         searchAPI = SearchAPI.registerAPI(OAuthToken);
         repositoryAPI = RepositoryAPI.registerAPI(OAuthToken);
         userAPI = UserAPI.registerAPI(OAuthToken);
+        contentAPI = ContentAPI.registerAPI(OAuthToken);
+        fileAPI = FileAPI.registerAPI(OAuthToken);
     }
 
     public String getRESTRawResponse(String requestURL) throws IOException, InterruptedException {
@@ -33,8 +42,8 @@ public class GitHubAPI {
     }
 
     public HttpResponse<String> sendRESTRequest(String requestURL) throws IOException, InterruptedException {
-        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3.text-match+json")
-                .uri(URI.create(requestURL)).build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3+json")
+                .uri(URI.create(requestURL)).timeout(timeout).build();
         System.out.println("Sending REST request: " + httpRequest.uri());
 
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());

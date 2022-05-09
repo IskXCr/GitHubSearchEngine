@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class UserAPI {
 
@@ -64,7 +65,7 @@ public class UserAPI {
     public HttpResponse<String> sendUserRequestDirect(URI uri) throws IOException, InterruptedException {
 
         HttpRequest httpRequest = HttpRequest.newBuilder().headers("Authorization", "Bearer " + OAuthToken, "Accept", "application/vnd.github.v3+json")
-                .uri(uri).build();
+                .uri(uri).timeout(Duration.ofSeconds(10)).build();
         System.out.println("Sending user request: " + httpRequest.uri());
 
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
