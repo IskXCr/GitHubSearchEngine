@@ -1,6 +1,6 @@
 package API.search.requests;
 
-public abstract class SearchRequest {
+public class SearchRequest {
 
     StringBuilder requestBuilder;
     int page;
@@ -8,6 +8,11 @@ public abstract class SearchRequest {
     public SearchRequest() {
         requestBuilder = new StringBuilder();
         page = 1;
+    }
+
+    public SearchRequest(SearchRequest request) {
+        requestBuilder = new StringBuilder(request.requestBuilder.toString());
+        page = request.page;
     }
 
     /**
@@ -25,6 +30,21 @@ public abstract class SearchRequest {
         }
     }
 
+    /**
+     * Increase result page number by <code>amount</code>
+     *
+     * @param amount amount
+     */
+    public void incrResultPage(int amount) {
+        if (amount >= 0) {
+            page += amount;
+        }
+    }
+
+    public int getResultPage() {
+        return this.page;
+    }
+
     public String getRequestStringRaw() {
         return requestBuilder.toString().concat("&page=" + page);
     }
@@ -39,17 +59,6 @@ public abstract class SearchRequest {
 
 
     //Below are utility methods
-
-    static StringBuilder removeTrailingSpace(StringBuilder stringBuilder) {
-        if (stringBuilder.lastIndexOf("  ") != -1) {
-            int index = stringBuilder.lastIndexOf("  ");
-            stringBuilder.replace(index, index + 2, " ");
-        }
-        if (stringBuilder.charAt(stringBuilder.length() - 1) == ' ') {
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        }
-        return stringBuilder;
-    }
 
     static String wrapIfRequired(String wrapped) {
         if (wrapped.contains(" ")) {

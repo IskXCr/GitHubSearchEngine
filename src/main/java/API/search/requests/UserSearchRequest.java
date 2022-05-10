@@ -37,8 +37,10 @@ public class UserSearchRequest extends SearchRequest {
         private final StringBuilder qualifierLanguage = new StringBuilder();
         private final StringBuilder qualifierDateOption = new StringBuilder();
         private final StringBuilder qualifierFollowerCount = new StringBuilder();
+
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
+        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -110,6 +112,12 @@ public class UserSearchRequest extends SearchRequest {
             return this;
         }
 
+        /**
+         *
+         * @param count count
+         * @param modifier can be one of <code>>,>=,<=,<,null</code>
+         * @return This builder.
+         */
         public RequestBuilder addFollowerCount(long count, String modifier) {
             qualifierFollowerCount.append("followers:").append(modifier).append(count).append(" ");
             return this;
@@ -125,25 +133,29 @@ public class UserSearchRequest extends SearchRequest {
             return this;
         }
 
+        public RequestBuilder setResultsPerSearch(int perSearch) {
+            this.PER_PAGE = perSearch;
+            return this;
+        }
+
         public UserSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.append(queryBasicBuilder)
-                    .append(queryTypeRestriction)
-                    .append(qualifierRepoCount)
-                    .append(qualifierLocation)
-                    .append(qualifierLanguage)
-                    .append(qualifierDateOption)
+            queryBuilder.append(queryBasicBuilder).append(" ")
+                    .append(queryTypeRestriction).append(" ")
+                    .append(qualifierRepoCount).append(" ")
+                    .append(qualifierLocation).append(" ")
+                    .append(qualifierLanguage).append(" ")
+                    .append(qualifierDateOption).append(" ")
                     .append(qualifierFollowerCount);
 
-            removeTrailingSpace(queryBuilder);
 
             UserSearchRequest req = new UserSearchRequest();
             StringBuilder reqBuilder = req.getRequestBuilder();
             reqBuilder.append("user?q=")
-                    .append(URLEncoder.encode(queryBuilder.toString(), StandardCharsets.UTF_8))
+                    .append(URLEncoder.encode(queryBuilder.toString().trim().replaceAll("[ ]{2,}", " "), StandardCharsets.UTF_8))
                     .append(sort == Sort.BestMatch ? "" : "&sort=" + sort.toString().toLowerCase())
                     .append(order == Order.Ascending ? "&order=asc" : "")    //default:desc
-                    .append("&per_page=100");
+                    .append("&per_page=").append(PER_PAGE);
             return req;
         }
 

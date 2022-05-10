@@ -40,7 +40,7 @@ import transformer.Transformer;
     "submodule_git_url"
 })
 @Generated("jsonschema2pojo")
-public class ContentFile {
+public class ContentFile extends RawContent{
 
     /**
      * 

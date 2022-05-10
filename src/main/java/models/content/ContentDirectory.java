@@ -30,7 +30,7 @@ import transformer.Transformer;
         "_links"
 })
 @Generated("jsonschema2pojo")
-public class ContentDirectory {
+public class ContentDirectory extends RawContent{
 
     /**
      * (Required)

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import models.content.ContentDirectory;
 import models.content.ContentFile;
 import models.repository.Repository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,12 +14,16 @@ import java.net.http.HttpResponse;
 
 public class ContentAPI extends RestAPI {
 
+    private static final Logger logger = LogManager.getLogger(RestAPI.class);
+
     ContentAPI(String OAuthToken) {
         super(OAuthToken);
+
+        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     ContentAPI() {
-        super();
+        this(null);
     }
 
     public ContentDirectory getContentDirectory(URI uri) throws IOException, InterruptedException {

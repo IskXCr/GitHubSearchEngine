@@ -36,7 +36,7 @@ import models.content.Links;
     "_links"
 })
 @Generated("jsonschema2pojo")
-public class SymlinkContent {
+public class SymlinkContent extends RawContent{
 
     /**
      * 

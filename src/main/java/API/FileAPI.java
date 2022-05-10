@@ -1,17 +1,25 @@
 package API;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpResponse;
 
 public class FileAPI extends RestAPI{
 
+    private static final Logger logger = LogManager.getLogger(FileAPI.class);
+
     FileAPI(String OAuthToken) {
         super(OAuthToken);
+
+        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
+
     }
 
     FileAPI() {
-        super();
+        this(null);
     }
 
 

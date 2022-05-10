@@ -3,6 +3,8 @@ package API;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,12 +12,16 @@ import java.net.http.HttpResponse;
 
 public class UserAPI extends RestAPI {
 
+    private static final Logger logger = LogManager.getLogger(UserAPI.class);
+
     UserAPI(String OAuthToken) {
         super(OAuthToken);
+
+        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     UserAPI() {
-        super();
+        this(null);
     }
 
     public User getUser(URI uri) throws IOException, InterruptedException {

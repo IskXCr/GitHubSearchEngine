@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class CodeSearchRequest extends SearchRequest {
 
     public enum Restriction {
-        File, Path, FileAndPath
+        File, Path
     }
 
     public enum SearchBy {
@@ -54,6 +54,7 @@ public class CodeSearchRequest extends SearchRequest {
 
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
+        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -65,30 +66,37 @@ public class CodeSearchRequest extends SearchRequest {
          * This will restrict your search to the restriction site applied.
          * <code>Path</code> means keyword contained in the full path.
          *
-         * @param restriction
-         * @return
+         * @param restrictions restrictions
+         * @return this builder
          */
-        public RequestBuilder addSearchRestriction(Restriction restriction) {
-            switch (restriction) {
-                case File -> queryBasicBuilder.append("in:file");
-                case Path -> queryBasicBuilder.append("in:path");
-                case FileAndPath -> queryBasicBuilder.append("in:file,path");
+        public RequestBuilder addSearchRestriction(Restriction... restrictions) {
+            if (restrictions.length != 0 && queryRestriction.length() != 0) {
+                queryRestriction.append("in:");
+            }
+            for (Restriction r : restrictions) {
+                if (queryRestriction.length() > ("in:".length())) {
+                    queryRestriction.append(',');
+                }
+                switch (r) {
+                    case File -> queryRestriction.append("file");
+                    case Path -> queryRestriction.append("path");
+                }
             }
             return this;
         }
 
         public RequestBuilder addUserOption(String username) {
-            qualifierOwner.append("username:" + username);
+            qualifierOwner.append("username:" + username).append(" ");
             return this;
         }
 
         public RequestBuilder addOrgOption(String orgName) {
-            qualifierOwner.append("org:" + orgName);
+            qualifierOwner.append("org:" + orgName).append(" ");
             return this;
         }
 
         public RequestBuilder addRepoOption(String repoFullName) {
-            qualifierOwner.append("repo:" + repoFullName);
+            qualifierOwner.append("repo:" + repoFullName).append(" ");
             return this;
         }
 
@@ -192,27 +200,32 @@ public class CodeSearchRequest extends SearchRequest {
             return this;
         }
 
+        public RequestBuilder setResultsPerSearch(int perSearch) {
+            this.PER_PAGE = perSearch;
+            return this;
+        }
+
 
         public CodeSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.append(queryBasicBuilder)
-                    .append(queryRestriction)
-                    .append(queryByBuilder)
-                    .append(qualifierOwner)
-                    .append(qualifierPath)
-                    .append(qualifierLang)
-                    .append(qualifierSize)
-                    .append(qualifierRepoOption)
+            queryBuilder.append(queryBasicBuilder).append(" ")
+                    .append(queryRestriction).append(" ")
+                    .append(queryByBuilder).append(" ")
+                    .append(qualifierOwner).append(" ")
+                    .append(qualifierPath).append(" ")
+                    .append(qualifierLang).append(" ")
+                    .append(qualifierSize).append(" ")
+                    .append(qualifierRepoOption).append(" ")
                     .append(qualifierDateOption);
-            removeTrailingSpace(queryBuilder);
 
             CodeSearchRequest req = new CodeSearchRequest();
             StringBuilder reqBuilder = req.getRequestBuilder();
+            //default:desc;
             reqBuilder.append("code?q=")
-                    .append(URLEncoder.encode(queryBuilder.toString(), StandardCharsets.UTF_8))
+                    .append(URLEncoder.encode(queryBuilder.toString().trim().replaceAll("[ ]{2,}", " "), StandardCharsets.UTF_8))
                     .append(sort == Sort.Indexed ? "&sort=indexed" : "")
-                    .append(order == Order.Ascending ? "&order=asc" : "")    //default:desc;
-                    .append("&per_page=100");
+                    .append(order == Order.Ascending ? "&order=asc" : "")
+                    .append("&per_page=").append(PER_PAGE);
             return req;
         }
 
