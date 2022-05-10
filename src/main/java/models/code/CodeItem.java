@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import models.repository.Repository;
 import models.TextMatch;
+import transformer.Transformer;
 
 
 /**
@@ -120,6 +121,10 @@ public class CodeItem {
     private List<TextMatch> textMatches = new ArrayList<TextMatch>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+
+    public URI getRawFileURI(){
+        return Transformer.transformToRawURI(htmlUrl);
+    }
 
     /**
      * 

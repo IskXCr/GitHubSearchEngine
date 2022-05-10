@@ -1,9 +1,6 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
+import API.GitHubAPI;
 import models.code.CodeResult;
-import models.code.CodeItem;
-import models.repository.Repository;
-import search.SearchAPI;
-import search.requests.CodeSearchRequest;
+import API.search.requests.CodeSearchRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,29 +19,22 @@ public class Test {
 
 
         CodeSearchRequest req = CodeSearchRequest.newBuilder()
-                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml").addLanguageOption("Maven POM").build();
+                .addSearchKeyword("org.log4j")
+                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml")
+                .addLanguageOption("Maven POM")
+                .build();
 
         String s = Files.readString(Path.of("result.json"));
 
-        CodeResult result = gitHubAPI.searchAPI.searchCode(req);
+        for (int i = 1; i < 100; i++) {
+            req.setResultPage(i);
+            CodeResult result = gitHubAPI.searchAPI.searchCode(req);
 //        CodeResult result = SearchAPI.convert(s);
 
+            System.out.println(result.getTotalCount());
+            System.out.println(result.getItems().size());
+        }
 
-        System.out.println(result.getTotalCount());
-        System.out.println(result.getItems().size());
-//        System.out.println(result);
-
-//        for (CodeItem codeItem : result.getItems()) {
-//
-//            Repository r = codeItem.getRepository();
-//
-//            Repository r1 = gitHubAPI.repositoryAPI.getRepository(r.getUrl());
-//
-//            codeItem.setRepository(r1);
-//
-//
-//            System.out.println(r1.getFullName() + ", created at " + r1.getCreatedAt());
-//        }
     }
 
     public static void testConn() throws IOException, InterruptedException {

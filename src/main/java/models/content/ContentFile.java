@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import models.content.Links;
+import transformer.Transformer;
 
 
 /**
@@ -134,15 +135,7 @@ public class ContentFile {
 
 
     public URI getRawFileURI(){
-        String s = htmlUrl.toString();
-        s = s.replaceFirst("/blob","");
-        s = s.replaceFirst("github.com", "raw.githubusercontent.com");
-        try {
-            return new URI(s);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null; //Which shouldn't happen.
+        return Transformer.transformToRawURI(htmlUrl);
     }
 
     /**

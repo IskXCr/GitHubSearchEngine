@@ -6,121 +6,93 @@ import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.processing.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import transformer.Transformer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "type",
-    "size",
-    "name",
-    "path",
-    "content",
-    "sha",
-    "url",
-    "git_url",
-    "html_url",
-    "download_url",
-    "_links"
+        "type",
+        "size",
+        "name",
+        "path",
+        "content",
+        "sha",
+        "url",
+        "git_url",
+        "html_url",
+        "download_url",
+        "_links"
 })
 @Generated("jsonschema2pojo")
 public class ContentDirectory {
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("type")
     private String type;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("size")
     private Integer size;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("name")
     private String name;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("path")
     private String path;
     @JsonProperty("content")
     private String content;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("sha")
     private String sha;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("url")
     private URI url;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("git_url")
     private URI gitUrl;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("html_url")
     private URI htmlUrl;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("download_url")
     private URI downloadUrl;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("_links")
     private Links links;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    public URI getRawFileURI(){
-        String s = htmlUrl.toString();
-        s = s.replaceFirst("/blob","");
-        s = s.replaceFirst("github.com", "raw.githubusercontent.com");
-        try {
-            return new URI(s);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null; //Which shouldn't happen.
+    public URI getRawFileURI() {
+        return Transformer.transformToRawURI(htmlUrl);
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("type")
     public String getType() {
@@ -128,9 +100,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("type")
     public void setType(String type) {
@@ -138,9 +108,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("size")
     public Integer getSize() {
@@ -148,9 +116,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("size")
     public void setSize(Integer size) {
@@ -158,9 +124,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("name")
     public String getName() {
@@ -168,9 +132,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("name")
     public void setName(String name) {
@@ -178,9 +140,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("path")
     public String getPath() {
@@ -188,9 +148,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("path")
     public void setPath(String path) {
@@ -208,9 +166,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("sha")
     public String getSha() {
@@ -218,9 +174,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("sha")
     public void setSha(String sha) {
@@ -228,9 +182,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("url")
     public URI getUrl() {
@@ -238,9 +190,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("url")
     public void setUrl(URI url) {
@@ -248,9 +198,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("git_url")
     public URI getGitUrl() {
@@ -258,9 +206,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("git_url")
     public void setGitUrl(URI gitUrl) {
@@ -268,9 +214,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("html_url")
     public URI getHtmlUrl() {
@@ -278,9 +222,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("html_url")
     public void setHtmlUrl(URI htmlUrl) {
@@ -288,9 +230,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("download_url")
     public URI getDownloadUrl() {
@@ -298,9 +238,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("download_url")
     public void setDownloadUrl(URI downloadUrl) {
@@ -308,9 +246,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("_links")
     public Links getLinks() {
@@ -318,9 +254,7 @@ public class ContentDirectory {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("_links")
     public void setLinks(Links links) {
@@ -343,54 +277,54 @@ public class ContentDirectory {
         sb.append(ContentDirectory.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("type");
         sb.append('=');
-        sb.append(((this.type == null)?"<null>":this.type));
+        sb.append(((this.type == null) ? "<null>" : this.type));
         sb.append(',');
         sb.append("size");
         sb.append('=');
-        sb.append(((this.size == null)?"<null>":this.size));
+        sb.append(((this.size == null) ? "<null>" : this.size));
         sb.append(',');
         sb.append("name");
         sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
+        sb.append(((this.name == null) ? "<null>" : this.name));
         sb.append(',');
         sb.append("path");
         sb.append('=');
-        sb.append(((this.path == null)?"<null>":this.path));
+        sb.append(((this.path == null) ? "<null>" : this.path));
         sb.append(',');
         sb.append("content");
         sb.append('=');
-        sb.append(((this.content == null)?"<null>":this.content));
+        sb.append(((this.content == null) ? "<null>" : this.content));
         sb.append(',');
         sb.append("sha");
         sb.append('=');
-        sb.append(((this.sha == null)?"<null>":this.sha));
+        sb.append(((this.sha == null) ? "<null>" : this.sha));
         sb.append(',');
         sb.append("url");
         sb.append('=');
-        sb.append(((this.url == null)?"<null>":this.url));
+        sb.append(((this.url == null) ? "<null>" : this.url));
         sb.append(',');
         sb.append("gitUrl");
         sb.append('=');
-        sb.append(((this.gitUrl == null)?"<null>":this.gitUrl));
+        sb.append(((this.gitUrl == null) ? "<null>" : this.gitUrl));
         sb.append(',');
         sb.append("htmlUrl");
         sb.append('=');
-        sb.append(((this.htmlUrl == null)?"<null>":this.htmlUrl));
+        sb.append(((this.htmlUrl == null) ? "<null>" : this.htmlUrl));
         sb.append(',');
         sb.append("downloadUrl");
         sb.append('=');
-        sb.append(((this.downloadUrl == null)?"<null>":this.downloadUrl));
+        sb.append(((this.downloadUrl == null) ? "<null>" : this.downloadUrl));
         sb.append(',');
         sb.append("links");
         sb.append('=');
-        sb.append(((this.links == null)?"<null>":this.links));
+        sb.append(((this.links == null) ? "<null>" : this.links));
         sb.append(',');
         sb.append("additionalProperties");
         sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(((this.additionalProperties == null) ? "<null>" : this.additionalProperties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -400,18 +334,18 @@ public class ContentDirectory {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.htmlUrl == null)? 0 :this.htmlUrl.hashCode()));
-        result = ((result* 31)+((this.downloadUrl == null)? 0 :this.downloadUrl.hashCode()));
-        result = ((result* 31)+((this.type == null)? 0 :this.type.hashCode()));
-        result = ((result* 31)+((this.sha == null)? 0 :this.sha.hashCode()));
-        result = ((result* 31)+((this.content == null)? 0 :this.content.hashCode()));
-        result = ((result* 31)+((this.url == null)? 0 :this.url.hashCode()));
-        result = ((result* 31)+((this.path == null)? 0 :this.path.hashCode()));
-        result = ((result* 31)+((this.size == null)? 0 :this.size.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
-        result = ((result* 31)+((this.links == null)? 0 :this.links.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        result = ((result* 31)+((this.gitUrl == null)? 0 :this.gitUrl.hashCode()));
+        result = ((result * 31) + ((this.htmlUrl == null) ? 0 : this.htmlUrl.hashCode()));
+        result = ((result * 31) + ((this.downloadUrl == null) ? 0 : this.downloadUrl.hashCode()));
+        result = ((result * 31) + ((this.type == null) ? 0 : this.type.hashCode()));
+        result = ((result * 31) + ((this.sha == null) ? 0 : this.sha.hashCode()));
+        result = ((result * 31) + ((this.content == null) ? 0 : this.content.hashCode()));
+        result = ((result * 31) + ((this.url == null) ? 0 : this.url.hashCode()));
+        result = ((result * 31) + ((this.path == null) ? 0 : this.path.hashCode()));
+        result = ((result * 31) + ((this.size == null) ? 0 : this.size.hashCode()));
+        result = ((result * 31) + ((this.name == null) ? 0 : this.name.hashCode()));
+        result = ((result * 31) + ((this.links == null) ? 0 : this.links.hashCode()));
+        result = ((result * 31) + ((this.additionalProperties == null) ? 0 : this.additionalProperties.hashCode()));
+        result = ((result * 31) + ((this.gitUrl == null) ? 0 : this.gitUrl.hashCode()));
         return result;
     }
 
@@ -424,7 +358,7 @@ public class ContentDirectory {
             return false;
         }
         ContentDirectory rhs = ((ContentDirectory) other);
-        return (((((((((((((this.htmlUrl == rhs.htmlUrl)||((this.htmlUrl!= null)&&this.htmlUrl.equals(rhs.htmlUrl)))&&((this.downloadUrl == rhs.downloadUrl)||((this.downloadUrl!= null)&&this.downloadUrl.equals(rhs.downloadUrl))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.sha == rhs.sha)||((this.sha!= null)&&this.sha.equals(rhs.sha))))&&((this.content == rhs.content)||((this.content!= null)&&this.content.equals(rhs.content))))&&((this.url == rhs.url)||((this.url!= null)&&this.url.equals(rhs.url))))&&((this.path == rhs.path)||((this.path!= null)&&this.path.equals(rhs.path))))&&((this.size == rhs.size)||((this.size!= null)&&this.size.equals(rhs.size))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.links == rhs.links)||((this.links!= null)&&this.links.equals(rhs.links))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.gitUrl == rhs.gitUrl)||((this.gitUrl!= null)&&this.gitUrl.equals(rhs.gitUrl))));
+        return (((((((((((((this.htmlUrl == rhs.htmlUrl) || ((this.htmlUrl != null) && this.htmlUrl.equals(rhs.htmlUrl))) && ((this.downloadUrl == rhs.downloadUrl) || ((this.downloadUrl != null) && this.downloadUrl.equals(rhs.downloadUrl)))) && ((this.type == rhs.type) || ((this.type != null) && this.type.equals(rhs.type)))) && ((this.sha == rhs.sha) || ((this.sha != null) && this.sha.equals(rhs.sha)))) && ((this.content == rhs.content) || ((this.content != null) && this.content.equals(rhs.content)))) && ((this.url == rhs.url) || ((this.url != null) && this.url.equals(rhs.url)))) && ((this.path == rhs.path) || ((this.path != null) && this.path.equals(rhs.path)))) && ((this.size == rhs.size) || ((this.size != null) && this.size.equals(rhs.size)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.links == rhs.links) || ((this.links != null) && this.links.equals(rhs.links)))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.gitUrl == rhs.gitUrl) || ((this.gitUrl != null) && this.gitUrl.equals(rhs.gitUrl))));
     }
 
 }
