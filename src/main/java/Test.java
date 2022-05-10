@@ -11,7 +11,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Test {
-    private static final String OAuthToken = "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";
+
+    static String OAuthToken;
+    static{
+        try {
+            OAuthToken = Files.readString(Path.of("TestToken.txt"));
+            System.out.println(OAuthToken);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
 //        testConn();
@@ -26,7 +35,7 @@ public class Test {
 
         String s = Files.readString(Path.of("result.json"));
 
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 2; i++) {
             req.setResultPage(i);
             CodeResult result = gitHubAPI.searchAPI.searchCode(req);
 //        CodeResult result = SearchAPI.convert(s);
