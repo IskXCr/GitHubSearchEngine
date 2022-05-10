@@ -33,14 +33,15 @@ public class RestAPI {
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
             System.out.println("Error upon receiving REST response from API. This is usually caused by secondary rate limit. Please try again.\n" +
-                    "Request URL=" + uri.toString() +
-                    "Http response info returned:\n");
-            System.out.println(response.headers().toString());
-            System.out.println(response.body());
-            try {
-                throw new RequestRateExceededException();
-            } catch (RequestRateExceededException e) {
-                e.printStackTrace();
+                    "Request URL = " + uri.toString() + "\n" +
+                    "Http response code:" + response.statusCode());
+            APIErrorMessage message = objectMapper.readValue(response.body(), APIErrorMessage.class);
+            if (message.getMessage().contains("secondary rate limit")) {
+                try {
+                    throw new RequestRateExceededException();
+                } catch (RequestRateExceededException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return response;
