@@ -7,19 +7,30 @@ public abstract class SearchRequest {
 
     public SearchRequest() {
         requestBuilder = new StringBuilder();
-        page = 0;
+        page = 1;
     }
 
+    /**
+     * Set the result page number.<br>
+     * If <code>page<=0</code>, then the default page = 1 will be used. Otherwise,
+     * the corresponding result on <code>page</code> will be retrieved.
+     *
+     * @param page
+     */
     public void setResultPage(int page) {
-        this.page = page;
+        if (page <= 0) {
+            this.page = 1;
+        } else {
+            this.page = page;
+        }
     }
 
     public String getRequestStringRaw() {
-        return requestBuilder.toString().concat(page > 0 ? ("&page=" + page) : "");
+        return requestBuilder.toString().concat("&page=" + page);
     }
 
     public String getRequestString() {
-        return requestBuilder.toString().replace(' ', '+').concat(page > 0 ? ("&page=" + page) : "");
+        return requestBuilder.toString().replace(' ', '+').concat("&page=" + page);
     }
 
     public StringBuilder getRequestBuilder() {
