@@ -3,7 +3,7 @@
 A GitHub search engine for CS209A project backend application
 
 ## What is GitHubSearchEngine?
-This engine provides the basic functionality for querying GitHub repositories, codes and users with specific ```keywords```,
+This engine provides the basic functionality for querying GitHub `repositories`, `topics`, `codes` and `users` with specific ```keywords```,
 ```qualifiers``` and ```options```.
 
 The Engine interacts with GitHub REST api to provide the service, and it relies on the OAuthToken provided by the end user.
@@ -28,6 +28,7 @@ with ```language=Maven POM```, and creation date before Jan 3, 2022:
                 .addSearchKeyWord("log4j")
                 .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml")
                 .addLanguageOption("Maven POM")
+                .addDateOption(CodeSearchRequest.DateOption.Created, "2022-01-03", "<=")
                 .build();
 
         //Get the result

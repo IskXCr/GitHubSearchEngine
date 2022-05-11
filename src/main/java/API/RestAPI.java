@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import models.APIErrorMessage;
 import org.apache.logging.log4j.*;
 
 public class RestAPI {

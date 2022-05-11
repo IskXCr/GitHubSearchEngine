@@ -1,14 +1,12 @@
 package API;
 
-import API.search.requests.RepoSearchRequest;
-import API.search.requests.UserSearchRequest;
-import API.search.requests.CodeSearchRequest;
-import API.search.requests.SearchRequest;
+import API.search.requests.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.AppendableResult;
 import models.code.CodeResult;
 import models.repository.RepositoryResult;
+import models.topic.TopicResult;
 import models.user.UserResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +34,35 @@ public class SearchAPI extends RestAPI {
 
     SearchAPI() {
         this(null);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public TopicResult searchTopic(TopicSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchTopic(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public TopicResult searchTopic(TopicSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, TopicResult.class, count, timeIntervalMillis);
     }
 
     /**

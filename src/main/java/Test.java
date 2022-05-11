@@ -1,8 +1,10 @@
 import API.GitHubAPI;
 import API.search.requests.RepoSearchRequest;
+import API.search.requests.TopicSearchRequest;
 import models.code.CodeResult;
 import API.search.requests.CodeSearchRequest;
 import models.repository.RepositoryResult;
+import models.topic.TopicResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,13 +44,20 @@ public class Test {
 //                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml")
 //                .addLanguageOption("Maven POM")
 //                .build();
-        RepoSearchRequest req = RepoSearchRequest.newBuilder()
+
+//        RepoSearchRequest req = RepoSearchRequest.newBuilder()
+//                .addSearchKeyword("Data")
+//                .addSearchField(RepoSearchRequest.SearchBy.Topic, "java")
+//                .addDateOption(RepoSearchRequest.DateOption.Created, "2012-01-01", ">=")
+//                .build();
+
+        TopicSearchRequest req = TopicSearchRequest.newBuilder()
+                .addSearchKeyword("Java")
                 .addSearchKeyword("Data")
-                .addSearchField(RepoSearchRequest.SearchBy.Topic, "java")
-                .addDateOption(RepoSearchRequest.DateOption.Created, "2012-01-01", ">=")
+                .addSearchKeyword("Visualization")
                 .build();
 
-        RepositoryResult result = gitHubAPI.searchAPI.searchRepo(req, 100);
+        TopicResult result = gitHubAPI.searchAPI.searchTopic(req, 100);
 //        CodeResult result = SearchAPI.convert(s);
 
         System.out.println(result.getTotalCount());
