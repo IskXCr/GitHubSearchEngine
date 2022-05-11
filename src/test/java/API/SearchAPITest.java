@@ -1,14 +1,13 @@
 package API;
 
-import API.search.requests.TopicSearchRequest;
-import models.topic.TopicResult;
+import edu.sustech.search.engine.github.API.GitHubAPI;
+import edu.sustech.search.engine.github.API.search.requests.TopicSearchRequest;
+import edu.sustech.search.engine.github.models.topic.TopicResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SearchAPITest {
 
