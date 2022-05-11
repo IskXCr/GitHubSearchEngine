@@ -3,10 +3,10 @@
 A GitHub search engine for CS209A project backend application
 
 ## What is GitHubSearchEngine?
-This engine provides the basic functionality for querying GitHub `repositories`, `topics`, `codes` and `users` with specific ```keywords```,
-```qualifiers``` and ```options```, and java abstraction for `repos`, `users`, `topic`, `code segments`, `content files`, `content directories`, etc.
+This engine provides basic functionalities for querying GitHub `repositories`, `topics`, `codes` and `users` with specific ```keywords```,
+```qualifiers``` and ```options```, and supports java abstractions for `repos`, `users`, `topic`, `code segments`, `content files`, `content directories`, etc.
 
-The Engine interacts with GitHub REST api to provide the service, and it relies on the `OAuthToken` provided by the end user.
+The engine interacts with GitHub REST API to provide the service, and it relies on the `OAuthToken` provided by the end user.
 
 ## To register the search engine
 
@@ -16,7 +16,7 @@ You need the ```OAuthToken``` to register the engine.
     GitHubAPI gitHubAPI = GitHubAPI.registerAPI(OAuthtoken); 
 ```
 
-## To search codes in the GitHub
+## To search codes in GitHub
 
 For example, suppose you want to search all ```pom.xml``` files containing keyword ```log4j``` in GitHub,
 with ```language=Maven POM```, and creation date before Jan 3, 2022:

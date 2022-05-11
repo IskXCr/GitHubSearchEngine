@@ -214,7 +214,7 @@ public class SearchAPI extends RestAPI {
 
             logger.info("Result fetched: " + cnt);
 
-            if (cnt < count) {
+            if (cnt < count && request.getResultPage() <= endPage) {
                 logger.info("Waiting on time interval (millis) to fetch the next result: " + timeIntervalMillis);
                 Thread.sleep(timeIntervalMillis);
             }
