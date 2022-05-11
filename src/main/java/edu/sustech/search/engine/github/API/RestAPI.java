@@ -1,21 +1,42 @@
 package edu.sustech.search.engine.github.API;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import edu.sustech.search.engine.github.models.APIErrorMessage;
 import org.apache.logging.log4j.*;
 
 public class RestAPI {
     public static final Duration timeout = Duration.ofSeconds(10);
     private static final Logger logger = LogManager.getLogger(RestAPI.class);
+    private static final ObjectMapper staticObjectMapper = new ObjectMapper();
+    static{
+        staticObjectMapper.addHandler(new DeserializationProblemHandler() {
+            @Override
+            public Object handleWeirdStringValue(DeserializationContext ctxt, Class<?> targetType, String valueToConvert, String failureMsg) throws IOException {
+                logger.error("Incompatible result: On context:" + ctxt + ", valueToConvert=" + valueToConvert);
+                return null;
+            }
+
+            @Override
+            public Object handleWeirdNumberValue(DeserializationContext ctxt, Class<?> targetType, Number valueToConvert, String failureMsg) throws IOException {
+                logger.error("Incompatible result: On context:" + ctxt + ", valueToConvert=" + valueToConvert);
+                return null;
+            }
+        });
+    }
 
     /**
      * The <code>getHttpResponse</code> method uses this variable to determine whether the error message will be printed when it receives an unexpected response
@@ -29,6 +50,19 @@ public class RestAPI {
     public RestAPI(String OAuthToken) {
         this.token = OAuthToken;
         objectMapper = new ObjectMapper();
+        objectMapper.addHandler(new DeserializationProblemHandler() {
+            @Override
+            public Object handleWeirdStringValue(DeserializationContext ctxt, Class<?> targetType, String valueToConvert, String failureMsg) throws IOException {
+                logger.error("Incompatible result: On context:" + ctxt + ", valueToConvert=" + valueToConvert);
+                return null;
+            }
+
+            @Override
+            public Object handleWeirdNumberValue(DeserializationContext ctxt, Class<?> targetType, Number valueToConvert, String failureMsg) throws IOException {
+                logger.error("Incompatible result: On context:" + ctxt + ", valueToConvert=" + valueToConvert);
+                return null;
+            }
+        });
     }
 
     public RestAPI() {
@@ -83,9 +117,8 @@ public class RestAPI {
     }
 
     public static <T> T convert(String jsonContent, Class<T> clazz) {
-        ObjectMapper objMpr = new ObjectMapper();
         try {
-            return objMpr.readValue(jsonContent, clazz);
+            return staticObjectMapper.readValue(jsonContent, clazz);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -96,11 +96,11 @@ public class TopicResult implements AppendableResult {
         if (result1 == null) {
             return cnt;
         }
-        if (result1 instanceof TopicResult) {
-            for (Topic t : ((TopicResult) result1).getItems()) {
+        if (result1 instanceof TopicResult other) {
+            for (Topic t : other.getItems()) {
                 topics.add(t);
             }
-            cnt = ((TopicResult) result1).getItems().size();
+            cnt = other.getItems().size();
         }
         return cnt;
     }

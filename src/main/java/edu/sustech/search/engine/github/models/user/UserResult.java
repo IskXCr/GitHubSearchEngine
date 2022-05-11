@@ -97,11 +97,11 @@ public class UserResult implements AppendableResult {
             return cnt;
         }
 
-        if (result1 instanceof UserResult) {
-            for (User u : ((UserResult) result1).getItems()) {
+        if (result1 instanceof UserResult other) {
+            for (User u : other.getItems()) {
                 users.add(u);
             }
-            cnt = ((UserResult) result1).getItems().size();
+            cnt = other.getItems().size();
         }
         return cnt;
     }

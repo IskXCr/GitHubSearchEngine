@@ -97,11 +97,11 @@ public class CodeResult implements AppendableResult {
             return cnt;
         }
 
-        if (result1 instanceof CodeResult) {
-            for (CodeItem i : ((CodeResult) result1).getItems()) {
+        if (result1 instanceof CodeResult other) {
+            for (CodeItem i : other.getItems()) {
                 codeItems.add(i);
             }
-            cnt = ((CodeResult) result1).getItems().size();
+            cnt = other.getItems().size();
         }
         return cnt;
     }

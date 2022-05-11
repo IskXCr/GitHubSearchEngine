@@ -98,11 +98,11 @@ public class RepositoryResult implements AppendableResult {
             return cnt;
         }
 
-        if (result1 instanceof RepositoryResult) {
-            for (Repository r : ((RepositoryResult) result1).getItems()) {
+        if (result1 instanceof RepositoryResult other) {
+            for (Repository r : other.getItems()) {
                 repositories.add(r);
             }
-            cnt = ((RepositoryResult) result1).getItems().size();
+            cnt = other.getItems().size();
         }
         return cnt;
     }

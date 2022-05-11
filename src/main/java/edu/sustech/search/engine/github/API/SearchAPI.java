@@ -159,9 +159,9 @@ public class SearchAPI extends RestAPI {
      *
      * @param <T>                Result type
      * @param request1           Request (will create another copy)
-     * @param targetClazz        Target class for object mapper.
-     * @param count              Target Item count
-     * @param timeIntervalMillis Preferred time interval between requests.
+     * @param targetClazz        Target class for object mapper
+     * @param count              Target Item count. Note that the actual items retrieved might be more
+     * @param timeIntervalMillis Preferred time interval between requests
      * @return CodeResult
      * @throws IOException
      * @throws InterruptedException
@@ -178,7 +178,7 @@ public class SearchAPI extends RestAPI {
     public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
 
         SearchRequest request = new SearchRequest(request1);
-        logger.info("Starting to fetch results on request" + request.getRequestStringRaw() + " Target number: " + count);
+        logger.info("Starting to fetch results on request[" + request.getRequestStringRaw() + "]. Target number: " + count);
 
         int cnt = 0;
         int endPage = Integer.MAX_VALUE;
@@ -223,7 +223,7 @@ public class SearchAPI extends RestAPI {
         logger.warn("Recovering responses from REST API");
         setSuppressError(false);
 
-        logger.info("Results have been gathered on request: " + request.getRequestStringRaw());
+        logger.info("Results have been gathered on request [" + request.getRequestStringRaw() + "]");
 
         return result;
     }
@@ -233,6 +233,16 @@ public class SearchAPI extends RestAPI {
         public AppendableResult parse(String s);
     }
 
+    /**
+     * Automatically cast request result to the desired form.
+     *
+     * @param request Request
+     * @param clazz   Target type class instance
+     * @param <T>     Target type
+     * @return Object result
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public <T> T searchResult(SearchRequest request, Class<T> clazz) throws IOException, InterruptedException {
         String s = searchRaw(request);
         return objectMapper.readValue(s, clazz);
