@@ -176,9 +176,9 @@ public class SearchAPI extends RestAPI {
     }
 
     public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
-        logger.info("Starting to fetch results. Target number: " + count);
 
         SearchRequest request = new SearchRequest(request1);
+        logger.info("Starting to fetch results on request" + request.getRequestStringRaw() + " Target number: " + count);
 
         int cnt = 0;
         int endPage = Integer.MAX_VALUE;
@@ -222,6 +222,8 @@ public class SearchAPI extends RestAPI {
 
         logger.warn("Recovering responses from REST API");
         setSuppressError(false);
+
+        logger.info("Results have been gathered on request: " + request.getRequestStringRaw());
 
         return result;
     }
