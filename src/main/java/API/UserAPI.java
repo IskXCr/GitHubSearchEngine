@@ -25,15 +25,11 @@ public class UserAPI extends RestAPI {
     }
 
     public User getUser(URI uri) throws IOException, InterruptedException {
-        String s = sendUserRequestDirect(uri).body();
-        User user = objectMapper.readValue(s, User.class);
-        return user;
+        return convert(sendUserRequestDirect(uri).body(), User.class);
     }
 
     public User getUser(String username) throws IOException, InterruptedException {
-        String s = getUserInfoRaw(username);
-        User user = objectMapper.readValue(s, User.class);
-        return user;
+        return convert(getUserInfoRaw(username), User.class);
     }
 
     public String getUserInfoRaw(String username) throws IOException, InterruptedException {
@@ -55,13 +51,4 @@ public class UserAPI extends RestAPI {
         return new UserAPI(OAuthToken);
     }
 
-    public static User convert(String jsonContent) {
-        ObjectMapper objMpr = new ObjectMapper();
-        try {
-            return objMpr.readValue(jsonContent, User.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

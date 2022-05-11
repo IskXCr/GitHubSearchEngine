@@ -25,15 +25,11 @@ public class RepositoryAPI extends RestAPI {
     }
 
     public Repository getRepository(URI uri) throws IOException, InterruptedException {
-        String s = getRepositoryInfoDirect(uri).body();
-        Repository repository = objectMapper.readValue(s, Repository.class);
-        return repository;
+        return convert(getRepositoryInfoDirect(uri).body(), Repository.class);
     }
 
     public Repository getRepository(String repoFullName) throws IOException, InterruptedException {
-        String s = getRepositoryInfoRaw(repoFullName);
-        Repository repository = objectMapper.readValue(s, Repository.class);
-        return repository;
+        return convert(getRepositoryInfoRaw(repoFullName), Repository.class);
     }
 
     public String getRepositoryInfoRaw(String repoFullName) throws IOException, InterruptedException {
@@ -53,13 +49,4 @@ public class RepositoryAPI extends RestAPI {
         return new RepositoryAPI(OAuthToken);
     }
 
-    public static Repository convert(String jsonContent) {
-        ObjectMapper objMpr = new ObjectMapper();
-        try {
-            return objMpr.readValue(jsonContent, Repository.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

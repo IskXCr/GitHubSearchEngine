@@ -1,5 +1,6 @@
 package API;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -79,6 +80,16 @@ public class RestAPI {
             logger.warn("Error suppression on http response has been recovered.");
         }
         suppressError = isErrorSuppressed;
+    }
+
+    public static <T> T convert(String jsonContent, Class<T> clazz) {
+        ObjectMapper objMpr = new ObjectMapper();
+        try {
+            return objMpr.readValue(jsonContent, clazz);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

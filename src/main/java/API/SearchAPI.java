@@ -1,8 +1,6 @@
 package API;
 
 import API.search.requests.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import models.AppendableResult;
 import models.code.CodeResult;
 import models.repository.RepositoryResult;
@@ -249,16 +247,6 @@ public class SearchAPI extends RestAPI {
 
     public static SearchAPI registerAPI(String OAuthToken) {
         return new SearchAPI(OAuthToken);
-    }
-
-    public static <T> T convert(String jsonContent, Class<T> clazz) {
-        ObjectMapper objMpr = new ObjectMapper();
-        try {
-            return objMpr.readValue(jsonContent, clazz);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public static int parseEndPageCount(HttpResponse<String> response) {

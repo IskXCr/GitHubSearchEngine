@@ -27,11 +27,11 @@ public class ContentAPI extends RestAPI {
     }
 
     public ContentDirectory getContentDirectory(URI uri) throws IOException, InterruptedException {
-        return objectMapper.readValue(getContentDirect(uri).body(), ContentDirectory.class);
+        return convert(getContentDirect(uri).body(), ContentDirectory.class);
     }
 
     public ContentFile getContentFile(URI uri) throws IOException, InterruptedException {
-        return objectMapper.readValue(getContentDirect(uri).body(), ContentFile.class);
+        return convert(getContentDirect(uri).body(), ContentFile.class);
     }
 
     public String getContentRaw(Repository repo, String path) throws IOException, InterruptedException {
@@ -44,23 +44,12 @@ public class ContentAPI extends RestAPI {
     }
 
     public HttpResponse<String> getContentDirect(URI uri) throws IOException, InterruptedException {
-
         return getHttpResponse(uri);
     }
 
 
     public static ContentAPI registerAPI(String OAuthToken) {
         return new ContentAPI(OAuthToken);
-    }
-
-    public static <T> T convert(String jsonContent, Class<T> clazz) {
-        ObjectMapper objMpr = new ObjectMapper();
-        try {
-            return objMpr.readValue(jsonContent, clazz);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private static String unwrapSlashes(String s) {

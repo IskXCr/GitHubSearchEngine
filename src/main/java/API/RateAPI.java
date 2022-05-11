@@ -20,6 +20,6 @@ public class RateAPI extends RestAPI {
 
     public RateLimitResult getRateLimit() throws IOException, InterruptedException {
         HttpResponse<String> response = getHttpResponse(URI.create("https://api.github.com/rate_limit"));
-        return objectMapper.readValue(response.body(), RateLimitResult.class);
+        return convert(response.body(), RateLimitResult.class);
     }
 }
