@@ -1,14 +1,15 @@
 package API;
 
 import API.search.requests.RepoSearchRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import models.code.CodeItem;
-import models.code.CodeResult;
+import API.search.requests.UserSearchRequest;
 import API.search.requests.CodeSearchRequest;
 import API.search.requests.SearchRequest;
-import models.repository.Repository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import models.AppendableResult;
+import models.code.CodeResult;
 import models.repository.RepositoryResult;
+import models.user.UserResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +23,7 @@ public class SearchAPI extends RestAPI {
 
     private static final Logger logger = LogManager.getLogger(SearchAPI.class);
 
-    private static final int DEFAULT_INTERVAL = 3000; //Unit: ms
+    private static final int DEFAULT_INTERVAL = 15000; //Unit: ms
 
     private final RateAPI rateAPI;
 
@@ -38,14 +39,41 @@ public class SearchAPI extends RestAPI {
     }
 
     /**
-     * This method uses while loop to request for search results.
-     * Please notice that the GitHub REST API may severely restrict your ability to query the code result.
-     * If too often the secondary rate limit is encountered, please consider using the other method with increased
-     * <code>timeIntervalMillis</code>, where <code>default = 3000</code>, and run this method in another thread.
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
      *
-     * @param request1 Request (will create another copy)
-     * @param count    Target Item count
-     * @return CodeResult
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public UserResult searchUser(UserSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchUser(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public UserResult searchUser(UserSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, UserResult.class, count, timeIntervalMillis);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @return
      * @throws IOException
      * @throws InterruptedException
      */
@@ -54,78 +82,75 @@ public class SearchAPI extends RestAPI {
     }
 
     /**
-     * This method uses while loop to request for search results.
-     * Please notice that the GitHub REST API may severely restrict your ability to query the code result.
-     * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
-     * (a typical recommendation might be <code>180000</code>), and run this method in another thread.
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
      *
-     * @param request1           Request (will create another copy)
-     * @param count              Target Item count
-     * @param timeIntervalMillis Preferred time interval between request.
-     * @return CodeResult
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
      * @throws IOException
      * @throws InterruptedException
      */
     public CodeResult searchCode(CodeSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
-        logger.info("Starting to fetch results. Target number: " + count);
-
-        SearchRequest request = new SearchRequest(request1);
-
-        int cnt = 0;
-        HttpResponse<String> response = search(request);
-        int endPage = parseEndPageCount(response);
-
-        String s = response.body();
-        CodeResult result = objectMapper.readValue(s, CodeResult.class);
-        cnt += result.getItems().size();
-        request.incrResultPage(1);
-
-
-        int loopCnt = 2;
-        while (cnt < count && request.getResultPage() <= endPage) {
-            logger.info("Looping: " + loopCnt++);
-            response = search(request);
-
-            if (endPage == Integer.MAX_VALUE) {
-                endPage = parseEndPageCount(response);
-            }
-
-            logger.info("Waiting on time interval (millis):" + timeIntervalMillis);
-            Thread.sleep(timeIntervalMillis);
-            CodeResult result1 = convert(response.body(), CodeResult.class);
-
-            for (CodeItem i : result1.getItems()) {
-                result.getItems().add(i);
-            }
-
-            if (result1.getItems().size() != 0) {
-                if (result.getTotalCount() == null) {
-                    result.setTotalCount(result1.getTotalCount());
-                }
-                request.incrResultPage(1);
-                cnt += result1.getItems().size();
-            }
-
-            logger.info("Result fetched: " + cnt);
-        }
-        request.setResultPage(1);
-        return result;
+        return searchType(request1, CodeResult.class, count, timeIntervalMillis);
     }
 
     /**
-     * This method uses while loop to request for search results.
-     * Please notice that the GitHub REST API may severely restrict your ability to query the code result.
-     * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
-     * (a typical recommendation might be <code>180000</code>), and run this method in another thread.
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
      *
-     * @param request1           Request (will create another copy)
-     * @param count              Target Item count
-     * @param timeIntervalMillis Preferred time interval between request.
-     * @return CodeResult
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public RepositoryResult searchRepo(RepoSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchRepo(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
      * @throws IOException
      * @throws InterruptedException
      */
     public RepositoryResult searchRepo(RepoSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, RepositoryResult.class, count, timeIntervalMillis);
+    }
+
+    /**
+     * This method uses while loop to request for search results.
+     * Please notice that the GitHub REST API may severely restrict your ability to query the result.
+     * <br>
+     * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
+     * (a typical recommendation might be <code>180000</code>), and run this method in another thread.
+     *
+     * @param <T>                Result type
+     * @param request1           Request (will create another copy)
+     * @param targetClazz        Target class for object mapper.
+     * @param count              Target Item count
+     * @param timeIntervalMillis Preferred time interval between requests.
+     * @return CodeResult
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends AppendableResult> T searchType(SearchRequest request1, Class<T> targetClazz, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return (T) searchLoopFetching(request1, s -> convert(s, targetClazz), count, timeIntervalMillis); //It must be T, so no worry.
+    }
+
+    public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
+        return searchLoopFetching(request1, null, p, count, timeIntervalMillis);
+    }
+
+    public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
         logger.info("Starting to fetch results. Target number: " + count);
 
         SearchRequest request = new SearchRequest(request1);
@@ -133,62 +158,57 @@ public class SearchAPI extends RestAPI {
         int cnt = 0;
         int endPage = Integer.MAX_VALUE;
         HttpResponse<String> response;
-        RepositoryResult result = null;
+        AppendableResult result = origin;
 
-        int loopCnt = 1;
-        do {
-            logger.info("Looping: " + loopCnt++);
+        logger.warn("Suppressing responses from REST API");
+        setSuppressError(true);
+
+        for (int loopCnt = 1; cnt < count && request.getResultPage() <= endPage; loopCnt++) {
+            logger.info("Looping: " + loopCnt);
             response = search(request);
 
             if (endPage == Integer.MAX_VALUE) {
                 endPage = parseEndPageCount(response);
             }
 
-            RepositoryResult result1 = convert(response.body(), RepositoryResult.class);
-            if (result == null && result1.getItems().size() != 0) {
-                result = result1;
-            } else {
-                for (Repository r : result1.getItems()) {
-                    result.getItems().add(r);
-                }
-            }
+            AppendableResult result1 = p.parse(response.body());
 
-            if (result1.getItems().size() != 0) {
-                if (result.getTotalCount() == null) {
-                    result.setTotalCount(result1.getTotalCount());
-                }
+            if (result == null && result1.getItemCount() != 0) {
+                result = result1;
+                cnt = result.getItemCount();
                 request.incrResultPage(1);
-                cnt += result1.getItems().size();
+            } else if (result != null) {
+                int incr = result.appendItems(result1);
+                if (incr != 0) {
+                    request.incrResultPage(1);
+                    cnt += incr;
+                }
             }
 
             logger.info("Result fetched: " + cnt);
 
-            logger.info("Waiting on time interval (millis) to fetch the next result: " + timeIntervalMillis);
-            Thread.sleep(timeIntervalMillis);
-        } while (cnt < count && request.getResultPage() <= endPage);
+            if (cnt < count) {
+                logger.info("Waiting on time interval (millis) to fetch the next result: " + timeIntervalMillis);
+                Thread.sleep(timeIntervalMillis);
+            }
+        }
 
         request.setResultPage(1);
+
+        logger.warn("Recovering responses from REST API");
+        setSuppressError(false);
+
         return result;
     }
 
-
-    public void searchLoopFetching(SearchRequest request, Performable p, int count, long timeIntervalMillis) {
-        logger.info("Starting to fetch results. Target number: " + count);
-
-    }
-
-    public interface Performable {
-        public void run();
-    }
-
-    public interface Accumulator {
-        public int accumulate();
+    @FunctionalInterface
+    public interface AppendableResultParser {
+        public AppendableResult parse(String s);
     }
 
     public <T> T searchResult(SearchRequest request, Class<T> clazz) throws IOException, InterruptedException {
         String s = searchRaw(request);
-        T result = objectMapper.readValue(s, clazz);
-        return result;
+        return objectMapper.readValue(s, clazz);
     }
 
     public String searchRaw(SearchRequest request) throws IOException, InterruptedException {
@@ -215,17 +235,15 @@ public class SearchAPI extends RestAPI {
     }
 
     public static int parseEndPageCount(HttpResponse<String> response) {
-
-        //Check the max page number allowed
-//        System.out.println(response.headers());
-
         int result = Integer.MAX_VALUE;
         if (response.headers().firstValue("Link").isPresent()) {
             try {
                 String s1 = response.headers().firstValue("Link").get();
                 Pattern p1 = Pattern.compile("&page=(\\d+)");
+
                 logger.debug("The given header to read is: " + s1);
                 logger.debug("The given index of the rel=\"last\" is: " + s1.indexOf("rel=\"last\""));
+
                 Matcher matcher1 = p1.matcher(s1.substring((
                         Math.max(s1.indexOf("rel=\"last\"") - 30, 0) //practice value 30
                 )));

@@ -6,40 +6,36 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.processing.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import models.AppendableResult;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "total_count",
-    "incomplete_results",
-    "items"
+        "total_count",
+        "incomplete_results",
+        "items"
 })
 @Generated("jsonschema2pojo")
-public class RepositoryResult {
+public class RepositoryResult implements AppendableResult {
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     private Integer totalCount;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     private Boolean incompleteResults;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     private List<Repository> repositories = new ArrayList<Repository>();
@@ -47,9 +43,7 @@ public class RepositoryResult {
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     public Integer getTotalCount() {
@@ -57,9 +51,7 @@ public class RepositoryResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     public void setTotalCount(Integer totalCount) {
@@ -67,9 +59,7 @@ public class RepositoryResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     public Boolean getIncompleteResults() {
@@ -77,9 +67,7 @@ public class RepositoryResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     public void setIncompleteResults(Boolean incompleteResults) {
@@ -87,9 +75,7 @@ public class RepositoryResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     public List<Repository> getItems() {
@@ -97,13 +83,33 @@ public class RepositoryResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     public void setItems(List<Repository> repositories) {
         this.repositories = repositories;
+    }
+
+    @Override
+    public int appendItems(AppendableResult result1) {
+        int cnt = 0;
+
+        if (result1 == null) {
+            return cnt;
+        }
+
+        if (result1 instanceof RepositoryResult) {
+            for (Repository r : ((RepositoryResult) result1).getItems()) {
+                repositories.add(r);
+            }
+            cnt = ((RepositoryResult) result1).getItems().size();
+        }
+        return cnt;
+    }
+
+    @Override
+    public int getItemCount(){
+        return repositories.size();
     }
 
     @JsonAnyGetter
@@ -122,22 +128,22 @@ public class RepositoryResult {
         sb.append(RepositoryResult.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("totalCount");
         sb.append('=');
-        sb.append(((this.totalCount == null)?"<null>":this.totalCount));
+        sb.append(((this.totalCount == null) ? "<null>" : this.totalCount));
         sb.append(',');
         sb.append("incompleteResults");
         sb.append('=');
-        sb.append(((this.incompleteResults == null)?"<null>":this.incompleteResults));
+        sb.append(((this.incompleteResults == null) ? "<null>" : this.incompleteResults));
         sb.append(',');
         sb.append("items");
         sb.append('=');
-        sb.append(((this.repositories == null)?"<null>":this.repositories));
+        sb.append(((this.repositories == null) ? "<null>" : this.repositories));
         sb.append(',');
         sb.append("additionalProperties");
         sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(((this.additionalProperties == null) ? "<null>" : this.additionalProperties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -147,10 +153,10 @@ public class RepositoryResult {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.incompleteResults == null)? 0 :this.incompleteResults.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        result = ((result* 31)+((this.totalCount == null)? 0 :this.totalCount.hashCode()));
-        result = ((result* 31)+((this.repositories == null)? 0 :this.repositories.hashCode()));
+        result = ((result * 31) + ((this.incompleteResults == null) ? 0 : this.incompleteResults.hashCode()));
+        result = ((result * 31) + ((this.additionalProperties == null) ? 0 : this.additionalProperties.hashCode()));
+        result = ((result * 31) + ((this.totalCount == null) ? 0 : this.totalCount.hashCode()));
+        result = ((result * 31) + ((this.repositories == null) ? 0 : this.repositories.hashCode()));
         return result;
     }
 
@@ -163,7 +169,7 @@ public class RepositoryResult {
             return false;
         }
         RepositoryResult rhs = ((RepositoryResult) other);
-        return (((((this.incompleteResults == rhs.incompleteResults)||((this.incompleteResults!= null)&&this.incompleteResults.equals(rhs.incompleteResults)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.totalCount == rhs.totalCount)||((this.totalCount!= null)&&this.totalCount.equals(rhs.totalCount))))&&((this.repositories == rhs.repositories)||((this.repositories != null)&&this.repositories.equals(rhs.repositories))));
+        return (((((this.incompleteResults == rhs.incompleteResults) || ((this.incompleteResults != null) && this.incompleteResults.equals(rhs.incompleteResults))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.totalCount == rhs.totalCount) || ((this.totalCount != null) && this.totalCount.equals(rhs.totalCount)))) && ((this.repositories == rhs.repositories) || ((this.repositories != null) && this.repositories.equals(rhs.repositories))));
     }
 
 }

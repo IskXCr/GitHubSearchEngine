@@ -5,40 +5,36 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.processing.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import models.AppendableResult;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "total_count",
-    "incomplete_results",
-    "items"
+        "total_count",
+        "incomplete_results",
+        "items"
 })
 @Generated("jsonschema2pojo")
-public class CodeResult {
+public class CodeResult implements AppendableResult {
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     private Integer totalCount;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     private Boolean incompleteResults;
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     private List<CodeItem> codeItems = new ArrayList<CodeItem>();
@@ -46,9 +42,7 @@ public class CodeResult {
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     public Integer getTotalCount() {
@@ -56,9 +50,7 @@ public class CodeResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("total_count")
     public void setTotalCount(Integer totalCount) {
@@ -66,9 +58,7 @@ public class CodeResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     public Boolean getIncompleteResults() {
@@ -76,9 +66,7 @@ public class CodeResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("incomplete_results")
     public void setIncompleteResults(Boolean incompleteResults) {
@@ -86,9 +74,7 @@ public class CodeResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     public List<CodeItem> getItems() {
@@ -96,13 +82,33 @@ public class CodeResult {
     }
 
     /**
-     * 
      * (Required)
-     * 
      */
     @JsonProperty("items")
     public void setItems(List<CodeItem> codeItems) {
         this.codeItems = codeItems;
+    }
+
+    @Override
+    public int appendItems(AppendableResult result1) {
+        int cnt = 0;
+
+        if (result1 == null) {
+            return cnt;
+        }
+
+        if (result1 instanceof CodeResult) {
+            for (CodeItem i : ((CodeResult) result1).getItems()) {
+                codeItems.add(i);
+            }
+            cnt = ((CodeResult) result1).getItems().size();
+        }
+        return cnt;
+    }
+
+    @Override
+    public int getItemCount() {
+        return codeItems.size();
     }
 
     @JsonAnyGetter
@@ -121,22 +127,22 @@ public class CodeResult {
         sb.append(CodeResult.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("totalCount");
         sb.append('=');
-        sb.append(((this.totalCount == null)?"<null>":this.totalCount));
+        sb.append(((this.totalCount == null) ? "<null>" : this.totalCount));
         sb.append(',');
         sb.append("incompleteResults");
         sb.append('=');
-        sb.append(((this.incompleteResults == null)?"<null>":this.incompleteResults));
+        sb.append(((this.incompleteResults == null) ? "<null>" : this.incompleteResults));
         sb.append(',');
         sb.append("items");
         sb.append('=');
-        sb.append(((this.codeItems == null)?"<null>":this.codeItems));
+        sb.append(((this.codeItems == null) ? "<null>" : this.codeItems));
         sb.append(',');
         sb.append("additionalProperties");
         sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(((this.additionalProperties == null) ? "<null>" : this.additionalProperties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -146,10 +152,10 @@ public class CodeResult {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.incompleteResults == null)? 0 :this.incompleteResults.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        result = ((result* 31)+((this.totalCount == null)? 0 :this.totalCount.hashCode()));
-        result = ((result* 31)+((this.codeItems == null)? 0 :this.codeItems.hashCode()));
+        result = ((result * 31) + ((this.incompleteResults == null) ? 0 : this.incompleteResults.hashCode()));
+        result = ((result * 31) + ((this.additionalProperties == null) ? 0 : this.additionalProperties.hashCode()));
+        result = ((result * 31) + ((this.totalCount == null) ? 0 : this.totalCount.hashCode()));
+        result = ((result * 31) + ((this.codeItems == null) ? 0 : this.codeItems.hashCode()));
         return result;
     }
 
@@ -162,7 +168,7 @@ public class CodeResult {
             return false;
         }
         CodeResult rhs = ((CodeResult) other);
-        return (((((this.incompleteResults == rhs.incompleteResults)||((this.incompleteResults!= null)&&this.incompleteResults.equals(rhs.incompleteResults)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.totalCount == rhs.totalCount)||((this.totalCount!= null)&&this.totalCount.equals(rhs.totalCount))))&&((this.codeItems == rhs.codeItems)||((this.codeItems != null)&&this.codeItems.equals(rhs.codeItems))));
+        return (((((this.incompleteResults == rhs.incompleteResults) || ((this.incompleteResults != null) && this.incompleteResults.equals(rhs.incompleteResults))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.totalCount == rhs.totalCount) || ((this.totalCount != null) && this.totalCount.equals(rhs.totalCount)))) && ((this.codeItems == rhs.codeItems) || ((this.codeItems != null) && this.codeItems.equals(rhs.codeItems))));
     }
 
 }

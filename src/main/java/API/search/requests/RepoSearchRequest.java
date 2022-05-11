@@ -282,7 +282,7 @@ public class RepoSearchRequest extends SearchRequest {
         }
 
 
-        public CodeSearchRequest build() {
+        public RepoSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append(queryBasicBuilder).append(" ")
                     .append(queryRestriction).append(" ")
@@ -302,11 +302,11 @@ public class RepoSearchRequest extends SearchRequest {
                     .append(qualifierIssueOption).append(" ")
                     .append(qualifierSponsor);
 
-            CodeSearchRequest req = new CodeSearchRequest();
+            RepoSearchRequest req = new RepoSearchRequest();
             StringBuilder reqBuilder = req.getRequestBuilder();
 
             //default:desc;
-            reqBuilder.append("code?q=")
+            reqBuilder.append("repositories?q=")
                     .append(URLEncoder.encode(queryBuilder.toString().trim().replaceAll("[ ]{2,}", " "), StandardCharsets.UTF_8));
             if (sort != Sort.BestMatch) {
                 reqBuilder.append("&sort=");

@@ -1,6 +1,8 @@
 import API.GitHubAPI;
+import API.search.requests.RepoSearchRequest;
 import models.code.CodeResult;
 import API.search.requests.CodeSearchRequest;
+import models.repository.RepositoryResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,18 +37,18 @@ public class Test {
         GitHubAPI gitHubAPI = GitHubAPI.registerAPI(OAuthToken);
 
 
-        CodeSearchRequest req = CodeSearchRequest.newBuilder()
-                .addSearchKeyword("org.apache.logging.log4j")
-//                .addSearchKeyword("org.fasterxml.jackson.core")
-                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml")
-                .addLanguageOption("Maven POM")
-//                .addDateOption("2020-03-21", ">=")
+//        CodeSearchRequest req = CodeSearchRequest.newBuilder()
+//                .addSearchKeyword("org.apache.logging.log4j")
+//                .addSearchField(CodeSearchRequest.SearchBy.Filename, "pom.xml")
+//                .addLanguageOption("Maven POM")
+//                .build();
+        RepoSearchRequest req = RepoSearchRequest.newBuilder()
+                .addSearchKeyword("Data")
+                .addSearchField(RepoSearchRequest.SearchBy.Topic, "java")
+                .addDateOption(RepoSearchRequest.DateOption.Created, "2012-01-01", ">=")
                 .build();
 
-        GitHubAPI raw = GitHubAPI.registerAPI(null);
-//        String s = Files.readString(Path.of("result.json"));
-
-        CodeResult result = gitHubAPI.searchAPI.searchCode(req, 100);
+        RepositoryResult result = gitHubAPI.searchAPI.searchRepo(req, 100);
 //        CodeResult result = SearchAPI.convert(s);
 
         System.out.println(result.getTotalCount());

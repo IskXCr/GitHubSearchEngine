@@ -5,7 +5,7 @@ public class SearchRequest {
     StringBuilder requestBuilder;
     int page;
 
-    public SearchRequest() {
+    SearchRequest() {
         requestBuilder = new StringBuilder();
         page = 1;
     }

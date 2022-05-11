@@ -11,10 +11,6 @@ public class UserSearchRequest extends SearchRequest {
         User, Organization, None
     }
 
-    public enum Restriction {
-        File, Path, FileAndPath
-    }
-
     public enum Sort {
         Followers, Repositories, Joined, BestMatch
     }
@@ -161,6 +157,4 @@ public class UserSearchRequest extends SearchRequest {
 
 
     }
-
-
 }

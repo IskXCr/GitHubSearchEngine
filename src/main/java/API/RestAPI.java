@@ -2,32 +2,30 @@ package API;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Optional;
 
 import org.apache.logging.log4j.*;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 public class RestAPI {
     public static final Duration timeout = Duration.ofSeconds(10);
     private static final Logger logger = LogManager.getLogger(RestAPI.class);
 
-    final String OAuthToken;
+    /**
+     * The <code>getHttpResponse</code> method uses this variable to determine whether the error message will be printed when it receives an unexpected response
+     */
+    private boolean suppressError = false;
+
+    final String token;
     HttpClient client;
     final ObjectMapper objectMapper;
 
     public RestAPI(String OAuthToken) {
-        this.OAuthToken = OAuthToken;
+        this.token = OAuthToken;
         objectMapper = new ObjectMapper();
     }
 
@@ -35,18 +33,23 @@ public class RestAPI {
         this(null);
     }
 
+    public String getHttpResponseRaw(URI uri) throws IOException, InterruptedException {
+        return getHttpResponse(uri).body();
+    }
+
     public HttpResponse<String> getHttpResponse(URI uri) throws IOException, InterruptedException {
 
         HttpRequest.Builder builder = HttpRequest.newBuilder();
-        if (OAuthToken != null) {
-            builder.headers("Authorization", "token " + OAuthToken);
+        if (token != null) {
+            builder.headers("Authorization", "token " + token);
         }
         HttpRequest httpRequest = builder.headers("Accept", "application/vnd.github.v3+json")
                 .uri(uri).timeout(timeout).build();
         logger.info("Sending request: " + httpRequest.uri());
         client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200) {
+
+        if (response.statusCode() != 200 && !suppressError) {
             logger.error("Error upon receiving REST response from API. Check parameters, request intervals and etc. You may try again.");
             logger.error("Request URL = " + uri.toString());
             logger.error("Http response code: " + response.statusCode());
@@ -60,6 +63,21 @@ public class RestAPI {
 
         }
         return response;
+    }
+
+    /**
+     * If set to <code>true</code>, error messages for tries in the response will be hidden.
+     * This is usually used in loop fetching.
+     *
+     * @param isErrorSuppressed
+     */
+    public void setSuppressError(boolean isErrorSuppressed) {
+        if(isErrorSuppressed){
+            logger.warn("Error suppression on http response is " + isErrorSuppressed + ". This may cause hidden problems.");
+        }else{
+            logger.warn("Error suppression on http response has been recovered.");
+        }
+        suppressError = isErrorSuppressed;
     }
 
 }
