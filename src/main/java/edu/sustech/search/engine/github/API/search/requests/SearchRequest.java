@@ -57,6 +57,11 @@ public class SearchRequest {
         return this.requestBuilder;
     }
 
+    @Override
+    public String toString() {
+        return "[" + this.getClass().getSimpleName() + "]:" + requestBuilder.toString().replace(' ', '+');
+    }
+
 
     //Below are utility methods
 
