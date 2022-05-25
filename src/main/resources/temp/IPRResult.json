@@ -434,7 +434,7 @@
           "state": {
             "type": "string"
           },
-          "assignee": {
+          "assignee_p": {
             "anyOf": [
               {
                 "type": "null"

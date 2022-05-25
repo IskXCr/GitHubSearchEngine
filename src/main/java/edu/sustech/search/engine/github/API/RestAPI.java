@@ -15,6 +15,7 @@ import java.time.Duration;
 
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import edu.sustech.search.engine.github.API.search.InvalidResultException;
 import edu.sustech.search.engine.github.models.APIErrorMessage;
 import org.apache.logging.log4j.*;
 
@@ -22,7 +23,8 @@ public class RestAPI {
     public static final Duration timeout = Duration.ofSeconds(10);
     private static final Logger logger = LogManager.getLogger(RestAPI.class);
     private static final ObjectMapper staticObjectMapper = new ObjectMapper();
-    static{
+
+    static {
         staticObjectMapper.addHandler(new DeserializationProblemHandler() {
             @Override
             public Object handleWeirdStringValue(DeserializationContext ctxt, Class<?> targetType, String valueToConvert, String failureMsg) throws IOException {
@@ -108,15 +110,18 @@ public class RestAPI {
      * @param isErrorSuppressed
      */
     public void setSuppressError(boolean isErrorSuppressed) {
-        if(isErrorSuppressed){
+        if (isErrorSuppressed) {
             logger.warn("Error suppression on http response is " + isErrorSuppressed + ". This may cause hidden problems.");
-        }else{
+        } else {
             logger.warn("Error suppression on http response has been recovered.");
         }
         suppressError = isErrorSuppressed;
     }
 
     public static <T> T convert(String jsonContent, Class<T> clazz) {
+        if (jsonContent == null) {
+            logger.error(new InvalidResultException());
+        }
         try {
             return staticObjectMapper.readValue(jsonContent, clazz);
         } catch (JsonProcessingException e) {

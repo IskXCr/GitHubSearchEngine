@@ -5,7 +5,7 @@ public interface AppendableResult {
     /**
      *
      * @param other other appendable result
-     * @return item count appended
+     * @return the number of items appended
      */
     public int appendItems(AppendableResult other);
 

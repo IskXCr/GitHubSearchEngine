@@ -61,6 +61,7 @@
                 <configuration>
                     <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
                     <targetPackage>edu.sustech.test.models</targetPackage>
+<!--                    <removeOldOutput>true</removeOldOutput>-->
                 </configuration>
                 <executions>
                     <execution>
