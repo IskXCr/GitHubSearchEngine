@@ -10,7 +10,7 @@ The engine interacts with GitHub REST API to provide the service, and it relies 
 
 ## Documentations
 You can find the related javadoc under /docs inside the repository.
-Or you can check [Link text Here](http://iskxcr.github.io/GitHubSearchEngine/target/site/apidocs)
+Or you can check [Link text Here](http://iskxcr.github.io/GitHubSearchEngine/)
 
 ## To register the search engine
 
