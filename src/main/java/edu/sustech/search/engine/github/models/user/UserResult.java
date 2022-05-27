@@ -1,9 +1,6 @@
 package edu.sustech.search.engine.github.models.user;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.processing.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -13,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import edu.sustech.search.engine.github.models.AppendableResult;
+import edu.sustech.search.engine.github.models.code.CodeItem;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -21,7 +19,8 @@ import edu.sustech.search.engine.github.models.AppendableResult;
         "items"
 })
 @Generated("jsonschema2pojo")
-public class UserResult implements AppendableResult {
+public class UserResult implements AppendableResult,
+        Iterable<User> {
 
     /**
      * (Required)
@@ -37,7 +36,7 @@ public class UserResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    private List<User> users = new ArrayList<User>();
+    private List<edu.sustech.search.engine.github.models.user.User> users = new ArrayList<edu.sustech.search.engine.github.models.user.User>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -77,7 +76,7 @@ public class UserResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    public List<User> getItems() {
+    public List<edu.sustech.search.engine.github.models.user.User> getItems() {
         return users;
     }
 
@@ -85,7 +84,7 @@ public class UserResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    public void setItems(List<User> users) {
+    public void setItems(List<edu.sustech.search.engine.github.models.user.User> users) {
         this.users = users;
     }
 
@@ -172,4 +171,8 @@ public class UserResult implements AppendableResult {
         return (((((this.incompleteResults == rhs.incompleteResults) || ((this.incompleteResults != null) && this.incompleteResults.equals(rhs.incompleteResults))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.totalCount == rhs.totalCount) || ((this.totalCount != null) && this.totalCount.equals(rhs.totalCount)))) && ((this.users == rhs.users) || ((this.users != null) && this.users.equals(rhs.users))));
     }
 
+    @Override
+    public Iterator<User> iterator() {
+        return users.iterator();
+    }
 }

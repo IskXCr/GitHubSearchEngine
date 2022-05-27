@@ -29,7 +29,7 @@ import edu.sustech.search.engine.github.transformer.Transformer;
         "_links"
 })
 @Generated("jsonschema2pojo")
-public class ContentDirectory extends RawContent{
+public class ContentDirectory extends RawContent {
 
     /**
      * (Required)
@@ -82,7 +82,7 @@ public class ContentDirectory extends RawContent{
      * (Required)
      */
     @JsonProperty("_links")
-    private Links links;
+    private edu.sustech.search.engine.github.models.content.Links links;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -248,7 +248,7 @@ public class ContentDirectory extends RawContent{
      * (Required)
      */
     @JsonProperty("_links")
-    public Links getLinks() {
+    public edu.sustech.search.engine.github.models.content.Links getLinks() {
         return links;
     }
 

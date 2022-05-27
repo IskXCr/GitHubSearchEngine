@@ -18,7 +18,7 @@ public class TopicSearchRequest extends SearchRequest {
         return new RequestBuilder();
     }
 
-    public static class RequestBuilder {
+    public static class RequestBuilder extends SearchRequest.RequestBuilder {
         private final StringBuilder queryBasicBuilder = new StringBuilder();
 
         private final StringBuilder qualifierCurated = new StringBuilder();
@@ -29,7 +29,6 @@ public class TopicSearchRequest extends SearchRequest {
 
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
-        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -100,11 +99,6 @@ public class TopicSearchRequest extends SearchRequest {
             return this;
         }
 
-        public RequestBuilder setResultsPerSearch(int perSearch) {
-            this.PER_PAGE = perSearch;
-            return this;
-        }
-
         public TopicSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append(queryBasicBuilder).append(" ")
@@ -128,8 +122,7 @@ public class TopicSearchRequest extends SearchRequest {
                     case Updated -> reqBuilder.append("updated");
                 }
             }
-            reqBuilder.append(order == Order.Ascending ? "&order=asc" : "")
-                    .append("&per_page=").append(PER_PAGE);
+            reqBuilder.append(order == Order.Ascending ? "&order=asc" : "");
             return req;
         }
 

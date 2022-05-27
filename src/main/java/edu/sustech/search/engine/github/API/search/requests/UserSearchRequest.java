@@ -24,7 +24,7 @@ public class UserSearchRequest extends SearchRequest {
         return new RequestBuilder();
     }
 
-    public static class RequestBuilder {
+    public static class RequestBuilder extends SearchRequest.RequestBuilder {
         private final StringBuilder queryBasicBuilder = new StringBuilder();
         private final StringBuilder queryTypeRestriction = new StringBuilder();
 
@@ -36,7 +36,6 @@ public class UserSearchRequest extends SearchRequest {
 
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
-        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -129,10 +128,6 @@ public class UserSearchRequest extends SearchRequest {
             return this;
         }
 
-        public RequestBuilder setResultsPerSearch(int perSearch) {
-            this.PER_PAGE = perSearch;
-            return this;
-        }
 
         public UserSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
@@ -150,8 +145,7 @@ public class UserSearchRequest extends SearchRequest {
             reqBuilder.append("user?q=")
                     .append(URLEncoder.encode(queryBuilder.toString().trim().replaceAll("[ ]{2,}", " "), StandardCharsets.UTF_8))
                     .append(sort == Sort.BestMatch ? "" : "&sort=" + sort.toString().toLowerCase())
-                    .append(order == Order.Ascending ? "&order=asc" : "")    //default:desc
-                    .append("&per_page=").append(PER_PAGE);
+                    .append(order == Order.Ascending ? "&order=asc" : "");    //default:desc
             return req;
         }
 

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpResponse;
 
-public class FileAPI extends RestAPI{
+public class FileAPI extends RestAPI {
 
     private static final Logger logger = LogManager.getLogger(FileAPI.class);
 
@@ -24,11 +24,12 @@ public class FileAPI extends RestAPI{
 
 
     public String getFileRaw(URI uri) throws IOException, InterruptedException {
-        return getFileDirect(uri).body();
+        HttpResponse<String> response = getFileDirect(uri);
+        return response == null ? null : getFileDirect(uri).body();
     }
 
     public HttpResponse<String> getFileDirect(URI uri) throws IOException, InterruptedException {
-
+        logger.info("Getting raw file from " + uri.toString());
         return getHttpResponse(uri);
     }
 

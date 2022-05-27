@@ -1,10 +1,7 @@
 
 package edu.sustech.search.engine.github.models.repository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.processing.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import edu.sustech.search.engine.github.models.AppendableResult;
+import edu.sustech.search.engine.github.models.code.CodeItem;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -22,7 +20,8 @@ import edu.sustech.search.engine.github.models.AppendableResult;
         "items"
 })
 @Generated("jsonschema2pojo")
-public class RepositoryResult implements AppendableResult {
+public class RepositoryResult implements AppendableResult,
+        Iterable<Repository> {
 
     /**
      * (Required)
@@ -38,7 +37,7 @@ public class RepositoryResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    private List<Repository> repositories = new ArrayList<Repository>();
+    private List<Repository> repositories = new ArrayList<edu.sustech.search.engine.github.models.repository.Repository>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -108,7 +107,7 @@ public class RepositoryResult implements AppendableResult {
     }
 
     @Override
-    public int getItemCount(){
+    public int getItemCount() {
         return repositories.size();
     }
 
@@ -172,4 +171,8 @@ public class RepositoryResult implements AppendableResult {
         return (((((this.incompleteResults == rhs.incompleteResults) || ((this.incompleteResults != null) && this.incompleteResults.equals(rhs.incompleteResults))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.totalCount == rhs.totalCount) || ((this.totalCount != null) && this.totalCount.equals(rhs.totalCount)))) && ((this.repositories == rhs.repositories) || ((this.repositories != null) && this.repositories.equals(rhs.repositories))));
     }
 
+    @Override
+    public Iterator<Repository> iterator() {
+        return repositories.iterator();
+    }
 }

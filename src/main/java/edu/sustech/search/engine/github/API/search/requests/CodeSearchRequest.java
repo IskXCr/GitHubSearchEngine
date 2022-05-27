@@ -40,7 +40,7 @@ public class CodeSearchRequest extends SearchRequest {
         return new RequestBuilder();
     }
 
-    public static class RequestBuilder {
+    public static class RequestBuilder extends SearchRequest.RequestBuilder {
         private final StringBuilder queryBasicBuilder = new StringBuilder();
         private final StringBuilder queryRestriction = new StringBuilder();
         private final StringBuilder queryByBuilder = new StringBuilder();
@@ -54,7 +54,6 @@ public class CodeSearchRequest extends SearchRequest {
 
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
-        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -200,11 +199,6 @@ public class CodeSearchRequest extends SearchRequest {
             return this;
         }
 
-        public RequestBuilder setResultsPerSearch(int perSearch) {
-            this.PER_PAGE = perSearch;
-            return this;
-        }
-
 
         public CodeSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
@@ -224,8 +218,7 @@ public class CodeSearchRequest extends SearchRequest {
             reqBuilder.append("code?q=")
                     .append(URLEncoder.encode(queryBuilder.toString().trim().replaceAll("[ ]{2,}", " "), StandardCharsets.UTF_8))
                     .append(sort == Sort.Indexed ? "&sort=indexed" : "")
-                    .append(order == Order.Ascending ? "&order=asc" : "")
-                    .append("&per_page=").append(PER_PAGE);
+                    .append(order == Order.Ascending ? "&order=asc" : "");
             return req;
         }
 

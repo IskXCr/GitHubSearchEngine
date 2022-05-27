@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "_links"
 })
 @Generated("jsonschema2pojo")
-public class SymlinkContent extends RawContent{
+public class SymlinkContent extends RawContent {
 
     /**
      * 
@@ -115,7 +115,7 @@ public class SymlinkContent extends RawContent{
      * 
      */
     @JsonProperty("_links")
-    private Links links;
+    private edu.sustech.search.engine.github.models.content.Links links;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -335,7 +335,7 @@ public class SymlinkContent extends RawContent{
      * 
      */
     @JsonProperty("_links")
-    public Links getLinks() {
+    public edu.sustech.search.engine.github.models.content.Links getLinks() {
         return links;
     }
 

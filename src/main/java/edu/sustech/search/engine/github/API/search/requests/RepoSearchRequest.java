@@ -52,7 +52,7 @@ public class RepoSearchRequest extends SearchRequest {
         return new RequestBuilder();
     }
 
-    public static class RequestBuilder {
+    public static class RequestBuilder extends SearchRequest.RequestBuilder {
         private final StringBuilder queryBasicBuilder = new StringBuilder();
         private final StringBuilder queryRestriction = new StringBuilder();
         private final StringBuilder queryByBuilder = new StringBuilder();
@@ -75,7 +75,6 @@ public class RepoSearchRequest extends SearchRequest {
         private ForkOption forkOption = ForkOption.False;
         private Sort sort = Sort.BestMatch;
         private Order order = Order.Descending;
-        private int PER_PAGE = 100;
 
 
         public RequestBuilder addSearchKeyword(String keyword) {
@@ -98,11 +97,7 @@ public class RepoSearchRequest extends SearchRequest {
                 if (queryRestriction.length() > ("in:".length())) {
                     queryRestriction.append(',');
                 }
-                switch (r) {
-                    case Name -> queryRestriction.append("name");
-                    case Description -> queryRestriction.append("description");
-                    case Readme -> queryRestriction.append("readme");
-                }
+                queryRestriction.append(r.toString().toLowerCase());
             }
             return this;
         }
@@ -149,10 +144,7 @@ public class RepoSearchRequest extends SearchRequest {
          */
         public RequestBuilder addSearchField(SearchBy field, String... keywords) {
             for (String s : keywords) {
-                switch (field) {
-                    case Topic -> queryByBuilder.append("topic:");
-                }
-                queryByBuilder.append(wrapIfRequired(s)).append(" ");
+                queryByBuilder.append(field.toString().toLowerCase()).append(":").append(wrapIfRequired(s)).append(" ");
             }
             return this;
         }
@@ -164,11 +156,7 @@ public class RepoSearchRequest extends SearchRequest {
          * @return
          */
         public RequestBuilder addRepoOption(RepoOption option, String amount, String modifier) {
-            switch (option) {
-                case Stars -> qualifierRepoOption.append("stars:");
-                case Forks -> qualifierRepoOption.append("forks:");
-            }
-            qualifierRepoOption.append(modifier == null ? "" : modifier).append(amount).append(" ");
+            qualifierRepoOption.append(option).append(":").append(modifier == null ? "" : modifier).append(amount).append(" ");
             return this;
         }
 
@@ -180,7 +168,8 @@ public class RepoSearchRequest extends SearchRequest {
          * @return This builder.
          */
         public RequestBuilder addDateOption(DateOption option, String date, String modifier) {
-            qualifierDateOption.append(option.toString().toLowerCase()).append("created:").append(modifier == null ? "" : modifier).append(date).append(" ");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            qualifierDateOption.append(option.toString().toLowerCase()).append(":").append(modifier == null ? "" : modifier).append(date).append(" ");
             return this;
         }
 
@@ -217,7 +206,7 @@ public class RepoSearchRequest extends SearchRequest {
          * @return This builder.
          */
         public RequestBuilder addTopicCount(int count, String modifier) {
-            qualifierSize.append("topics:").append(modifier == null ? "" : modifier).append(count).append(" ");
+            qualifierTopicCount.append("topics:").append(modifier == null ? "" : modifier).append(count).append(" ");
             return this;
         }
 
@@ -276,11 +265,6 @@ public class RepoSearchRequest extends SearchRequest {
             return this;
         }
 
-        public RequestBuilder setResultsPerSearch(int perSearch) {
-            this.PER_PAGE = perSearch;
-            return this;
-        }
-
 
         public RepoSearchRequest build() {
             StringBuilder queryBuilder = new StringBuilder();
@@ -317,8 +301,7 @@ public class RepoSearchRequest extends SearchRequest {
                     case Updated -> reqBuilder.append("updated");
                 }
             }
-            reqBuilder.append(order == Order.Ascending ? "&order=asc" : "")
-                    .append("&per_page=").append(PER_PAGE);
+            reqBuilder.append(order == Order.Ascending ? "&order=asc" : "");
             return req;
         }
 

@@ -1,19 +1,24 @@
 package edu.sustech.search.engine.github.API;
 
+import edu.sustech.search.engine.github.API.rate.RateLimitResult;
 import edu.sustech.search.engine.github.API.search.requests.*;
+import edu.sustech.search.engine.github.models.commit.CommitResult;
+import edu.sustech.search.engine.github.models.issue.IPRResult;
+import edu.sustech.search.engine.github.models.label.LabelResult;
 import edu.sustech.search.engine.github.models.repository.RepositoryResult;
 import edu.sustech.search.engine.github.models.topic.TopicResult;
 import edu.sustech.search.engine.github.models.user.UserResult;
 import edu.sustech.search.engine.github.models.AppendableResult;
 import edu.sustech.search.engine.github.models.code.CodeResult;
+import edu.sustech.search.engine.github.transformer.Transformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.lang.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpResponse;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class SearchAPI extends RestAPI {
 
@@ -21,17 +26,105 @@ public class SearchAPI extends RestAPI {
 
     private static final int DEFAULT_INTERVAL = 15000; //Unit: ms
 
-    private final RateAPI rateAPI;
+    private static String acceptSchema = "application/vnd.github.v3.text-match+json";
+    private boolean isProvidingTextMatchEnabled = false;
 
     SearchAPI(String OAuthToken) {
         super(OAuthToken);
-        rateAPI = new RateAPI(OAuthToken);
-
         logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     SearchAPI() {
         this(null);
+    }
+
+    /**
+     * Search Issues and Pull-requests.
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public IPRResult searchIPR(IPRSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchIPR(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * Search Issues and Pull-requests.
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public IPRResult searchIPR(IPRSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, IPRResult.class, count, timeIntervalMillis);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public CommitResult searchCommit(CommitSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchCommit(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public CommitResult searchCommit(CommitSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, CommitResult.class, count, timeIntervalMillis);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public LabelResult searchLabel(LabelSearchRequest request1, int count) throws IOException, InterruptedException {
+        return searchLabel(request1, count, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * This method is a type-restricted implementation of the method <code>searchType</code>.
+     * For detailed documentation, see <code>searchType</code>
+     *
+     * @param request1
+     * @param count
+     * @param timeIntervalMillis
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public LabelResult searchLabel(LabelSearchRequest request1, int count, long timeIntervalMillis) throws IOException, InterruptedException {
+        return searchType(request1, LabelResult.class, count, timeIntervalMillis);
     }
 
     /**
@@ -175,62 +268,74 @@ public class SearchAPI extends RestAPI {
         return searchLoopFetching(request1, null, p, count, timeIntervalMillis);
     }
 
-    public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
+
+    public AppendableResult searchLoopFetching(SearchRequest request1, @Nullable AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
 
         SearchRequest request = new SearchRequest(request1);
-        logger.info("Starting to fetch results on request[" + request.getRequestStringRaw() + "]. Target number: " + count);
+        request.setResultPerPage(count);
+        logger.info("Starting to fetch results on request[" + request.getFullRequestStringWithoutPage() + "]. Target number: " + count);
 
         int cnt = 0;
-        int endPage = Integer.MAX_VALUE;
+        int endPageCount = Integer.MAX_VALUE;
         HttpResponse<String> response;
         AppendableResult result = origin;
 
-        logger.warn("Suppressing responses from REST API");
-        setSuppressError(true);
 
-        for (int loopCnt = 1; cnt < count && request.getResultPage() <= endPage; loopCnt++) {
+        setSuppressResponseError(true);
+
+        for (int loopCnt = 1; cnt < count && request.getResultPage() <= endPageCount; loopCnt++) {
             logger.info("Looping: " + loopCnt);
             response = search(request);
 
-            if (endPage == Integer.MAX_VALUE) {
-                endPage = parseEndPageCount(response);
-            }
+            if (response != null) {
+                if (endPageCount == Integer.MAX_VALUE) {
+                    endPageCount = parseEndPageCount(response);
+                }
 
-            AppendableResult result1 = p.parse(response.body());
+                AppendableResult result1 = p.parse(response.body());
 
-            if (result == null && result1.getItemCount() != 0) {
-                result = result1;
-                cnt = result.getItemCount();
-                request.incrResultPage(1);
-            } else if (result != null) {
-                int incr = result.appendItems(result1);
-                if (incr != 0) {
-                    request.incrResultPage(1);
-                    cnt += incr;
+                if (result == null) {
+                    if (result1 != null && result1.getItemCount() != 0) {
+                        result = result1;
+                        cnt = result.getItemCount();
+                        request.incrResultPage(1);
+                    }
+                } else {
+                    int incr = result.appendItems(result1);
+                    if (incr != 0) {
+                        request.incrResultPage(1);
+                        cnt += incr;
+                    } else {
+                        if (!suppressRateError) {
+                            printRateLimit(response);
+                            RateLimitResult res = getRateLimit();
+                            logger.error("The search rate limit has been captured and will be shown on the next error:");
+                            logger.error(res.getResources().getSearch());
+                        }
+                    }
                 }
             }
 
             logger.info("Result fetched: " + cnt);
 
-            if (cnt < count && request.getResultPage() <= endPage) {
-                logger.info("Waiting on time interval (millis) to fetch the next result: " + timeIntervalMillis);
+            if (cnt < count && request.getResultPage() <= endPageCount) {
+                logger.debug("Waiting on time interval (millis) to fetch the next result: " + timeIntervalMillis);
                 Thread.sleep(timeIntervalMillis);
             }
         }
 
         request.setResultPage(1);
 
-        logger.warn("Recovering responses from REST API");
-        setSuppressError(false);
+        setSuppressResponseError(false);
 
-        logger.info("Results have been gathered on request [" + request.getRequestStringRaw() + "]");
+        logger.info("Results have been gathered on request [" + request.getFullRequestStringWithoutPage() + "]");
 
         return result;
     }
 
     @FunctionalInterface
     public interface AppendableResultParser {
-        public AppendableResult parse(String s);
+        AppendableResult parse(String s);
     }
 
     /**
@@ -249,43 +354,37 @@ public class SearchAPI extends RestAPI {
     }
 
     public String searchRaw(SearchRequest request) throws IOException, InterruptedException {
-        return search(request).body();
+        HttpResponse<String> response = search(request);
+        return response == null ? null : response.body();
+    }
+
+    public List<HttpResponse<String>> searchRawLoop(SearchRequest request, int targetPageCount, long timeIntervalMillis) throws IOException, InterruptedException {
+        if (isProvidingTextMatchEnabled) {
+            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), acceptSchema, targetPageCount, timeIntervalMillis);
+        } else {
+            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), targetPageCount, timeIntervalMillis);
+        }
     }
 
     public HttpResponse<String> search(SearchRequest request) throws IOException, InterruptedException {
-        return getHttpResponse(URI.create("https://api.github.com/search/" + request.getRequestString()));
+        if (isProvidingTextMatchEnabled) {
+            return getHttpResponse(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), acceptSchema);
+        } else {
+            return getHttpResponse(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())));
+        }
+    }
+
+    /**
+     * If set to <code>true</code>, the search result will provide text-match metadata.
+     *
+     * @param enabled Whether the search result shall enable text-match providing.
+     */
+    public void setProvidingTextMatch(boolean enabled) {
+        isProvidingTextMatchEnabled = enabled;
     }
 
 
     public static SearchAPI registerAPI(String OAuthToken) {
         return new SearchAPI(OAuthToken);
-    }
-
-    public static int parseEndPageCount(HttpResponse<String> response) {
-        int result = Integer.MAX_VALUE;
-        if (response.headers().firstValue("Link").isPresent()) {
-            try {
-                String s1 = response.headers().firstValue("Link").get();
-                Pattern p1 = Pattern.compile("&page=(\\d+)");
-
-                logger.debug("The given header to read is: " + s1);
-                logger.debug("The given index of the rel=\"last\" is: " + s1.indexOf("rel=\"last\""));
-
-                Matcher matcher1 = p1.matcher(s1.substring((
-                        Math.max(s1.indexOf("rel=\"last\"") - 30, 0) //practice value 30
-                )));
-                if (matcher1.find()) {
-                    String result1 = matcher1.toMatchResult().group(1);
-                    logger.debug("Matcher result: " + result1);
-                    result = Integer.parseInt(result1);
-                }
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            }
-        }
-        if (result != Integer.MAX_VALUE) {
-            logger.info("New end page number found: " + result);
-        }
-        return result;
     }
 }

@@ -33,7 +33,7 @@ public class TextMatch {
     @JsonProperty("fragment")
     private String fragment;
     @JsonProperty("matches")
-    private List<Match> matches = new ArrayList<Match>();
+    private List<edu.sustech.search.engine.github.models.Match> matches = new ArrayList<edu.sustech.search.engine.github.models.Match>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -78,7 +78,7 @@ public class TextMatch {
     }
 
     @JsonProperty("matches")
-    public List<Match> getMatches() {
+    public List<edu.sustech.search.engine.github.models.Match> getMatches() {
         return matches;
     }
 

@@ -1,9 +1,7 @@
 package edu.sustech.search.engine.github.models.code;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 import javax.annotation.processing.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -21,7 +19,8 @@ import edu.sustech.search.engine.github.models.AppendableResult;
         "items"
 })
 @Generated("jsonschema2pojo")
-public class CodeResult implements AppendableResult {
+public class CodeResult implements AppendableResult,
+        Iterable<CodeItem> {
 
     /**
      * (Required)
@@ -37,7 +36,7 @@ public class CodeResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    private List<CodeItem> codeItems = new ArrayList<CodeItem>();
+    private List<edu.sustech.search.engine.github.models.code.CodeItem> codeItems = new ArrayList<edu.sustech.search.engine.github.models.code.CodeItem>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -77,7 +76,7 @@ public class CodeResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    public List<CodeItem> getItems() {
+    public List<edu.sustech.search.engine.github.models.code.CodeItem> getItems() {
         return codeItems;
     }
 
@@ -85,7 +84,7 @@ public class CodeResult implements AppendableResult {
      * (Required)
      */
     @JsonProperty("items")
-    public void setItems(List<CodeItem> codeItems) {
+    public void setItems(List<edu.sustech.search.engine.github.models.code.CodeItem> codeItems) {
         this.codeItems = codeItems;
     }
 
@@ -171,4 +170,8 @@ public class CodeResult implements AppendableResult {
         return (((((this.incompleteResults == rhs.incompleteResults) || ((this.incompleteResults != null) && this.incompleteResults.equals(rhs.incompleteResults))) && ((this.additionalProperties == rhs.additionalProperties) || ((this.additionalProperties != null) && this.additionalProperties.equals(rhs.additionalProperties)))) && ((this.totalCount == rhs.totalCount) || ((this.totalCount != null) && this.totalCount.equals(rhs.totalCount)))) && ((this.codeItems == rhs.codeItems) || ((this.codeItems != null) && this.codeItems.equals(rhs.codeItems))));
     }
 
+    @Override
+    public Iterator<CodeItem> iterator() {
+        return codeItems.iterator();
+    }
 }

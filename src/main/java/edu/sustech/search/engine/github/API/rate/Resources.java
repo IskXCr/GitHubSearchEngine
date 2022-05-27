@@ -33,7 +33,7 @@ public class Resources {
      * 
      */
     @JsonProperty("core")
-    private Core core;
+    private edu.sustech.search.engine.github.API.rate.Core core;
     /**
      * Rate Limit
      * <p>
@@ -41,7 +41,7 @@ public class Resources {
      * 
      */
     @JsonProperty("graphql")
-    private Graphql graphql;
+    private edu.sustech.search.engine.github.API.rate.Graphql graphql;
     /**
      * Rate Limit
      * <p>
@@ -50,7 +50,7 @@ public class Resources {
      * 
      */
     @JsonProperty("search")
-    private Search search;
+    private edu.sustech.search.engine.github.API.rate.Search search;
     /**
      * Rate Limit
      * <p>
@@ -90,7 +90,7 @@ public class Resources {
      * 
      */
     @JsonProperty("scim")
-    private Scim scim;
+    private edu.sustech.search.engine.github.API.rate.Scim scim;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -102,7 +102,7 @@ public class Resources {
      * 
      */
     @JsonProperty("core")
-    public Core getCore() {
+    public edu.sustech.search.engine.github.API.rate.Core getCore() {
         return core;
     }
 
@@ -125,7 +125,7 @@ public class Resources {
      * 
      */
     @JsonProperty("graphql")
-    public Graphql getGraphql() {
+    public edu.sustech.search.engine.github.API.rate.Graphql getGraphql() {
         return graphql;
     }
 
@@ -148,7 +148,7 @@ public class Resources {
      * 
      */
     @JsonProperty("search")
-    public Search getSearch() {
+    public edu.sustech.search.engine.github.API.rate.Search getSearch() {
         return search;
     }
 
@@ -259,7 +259,7 @@ public class Resources {
      * 
      */
     @JsonProperty("scim")
-    public Scim getScim() {
+    public edu.sustech.search.engine.github.API.rate.Scim getScim() {
         return scim;
     }
 

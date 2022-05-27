@@ -38,7 +38,7 @@ import edu.sustech.search.engine.github.transformer.Transformer;
     "submodule_git_url"
 })
 @Generated("jsonschema2pojo")
-public class ContentFile extends RawContent{
+public class ContentFile extends RawContent {
 
     /**
      * 
@@ -123,7 +123,7 @@ public class ContentFile extends RawContent{
      * 
      */
     @JsonProperty("_links")
-    private Links links;
+    private edu.sustech.search.engine.github.models.content.Links links;
     @JsonProperty("target")
     private String target;
     @JsonProperty("submodule_git_url")
@@ -362,7 +362,7 @@ public class ContentFile extends RawContent{
      * 
      */
     @JsonProperty("_links")
-    public Links getLinks() {
+    public edu.sustech.search.engine.github.models.content.Links getLinks() {
         return links;
     }
 

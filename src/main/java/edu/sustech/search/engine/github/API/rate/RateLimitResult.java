@@ -32,7 +32,7 @@ public class RateLimitResult {
      * 
      */
     @JsonProperty("resources")
-    private Resources resources;
+    private edu.sustech.search.engine.github.API.rate.Resources resources;
     /**
      * Rate Limit
      * <p>
@@ -41,7 +41,7 @@ public class RateLimitResult {
      * 
      */
     @JsonProperty("rate")
-    private Rate rate;
+    private edu.sustech.search.engine.github.API.rate.Rate rate;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -51,7 +51,7 @@ public class RateLimitResult {
      * 
      */
     @JsonProperty("resources")
-    public Resources getResources() {
+    public edu.sustech.search.engine.github.API.rate.Resources getResources() {
         return resources;
     }
 
@@ -73,7 +73,7 @@ public class RateLimitResult {
      * 
      */
     @JsonProperty("rate")
-    public Rate getRate() {
+    public edu.sustech.search.engine.github.API.rate.Rate getRate() {
         return rate;
     }
 
