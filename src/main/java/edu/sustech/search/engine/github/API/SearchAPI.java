@@ -13,7 +13,6 @@ import edu.sustech.search.engine.github.models.code.CodeResult;
 import edu.sustech.search.engine.github.transformer.Transformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.lang.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
@@ -269,7 +268,7 @@ public class SearchAPI extends RestAPI {
     }
 
 
-    public AppendableResult searchLoopFetching(SearchRequest request1, @Nullable AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
+    public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
 
         SearchRequest request = new SearchRequest(request1);
         request.setResultPerPage(count);

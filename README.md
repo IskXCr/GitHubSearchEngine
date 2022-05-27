@@ -8,6 +8,10 @@ This engine provides basic functionalities for querying GitHub `repositories`, `
 
 The engine interacts with GitHub REST API to provide the service, and it relies on the `OAuthToken` provided by the end user.
 
+## Documentations
+You can find the related javadoc under /target/site/apidocs inside the repository.
+Or you can check [Link text Here](http://iskxcr.github.io/GitHubSearchEngine/target/site/apidocs)
+
 ## To register the search engine
 
 You need the ```OAuthToken``` to register the engine.
