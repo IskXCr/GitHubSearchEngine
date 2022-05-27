@@ -26,7 +26,7 @@ You need the ```OAuthToken``` to register the engine.
 For example, suppose you want to search all ```pom.xml``` files containing keyword ```log4j``` in GitHub,
 with ```language=Maven POM```, and creation date before Jan 3, 2022:
 
-###Create a `SearchRequest`
+### Create a `SearchRequest`
 ```java
         //Build a request
         SearchRequest request = CodeSearchRequest
@@ -51,7 +51,7 @@ with ```language=Maven POM```, and creation date before Jan 3, 2022:
 ```
 ...etc.
 
-###Search using a `SearchRequest`
+### Search using a `SearchRequest`
 ```java
         TopicResult result = gitHubAPI.searchAPI.searchTopic(req2, 100);
 ```
