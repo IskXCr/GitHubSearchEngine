@@ -4,5 +4,10 @@ result.json
 result1.json
 result2.json
 /target/generated-sources
+/target/generated-test-sources
 /target/javadoc-bundle-options
+/target/classes
+/target/maven-archiver
+/target/maven-status
+/target/test-classes
 /.idea/
