@@ -22,7 +22,7 @@ class APITest {
         System.out.println(result);
     }
 
-    @Test
+//    @Test
     void test1() throws IOException, InterruptedException {
         String OAuthToken = Files.readString(Path.of("TestToken.txt"));
 
