@@ -81,11 +81,10 @@ public class SearchRequest {
     }
 
     /**
-     *
      * @return the full request string without the <code>per_page</code> and <code>page</code> parameter
      */
-    public String getFullRequestStringWithoutPage(){
-        return "https://api.github.com/search/"+requestBuilder.toString();
+    public String getFullRequestStringWithoutPage() {
+        return "https://api.github.com/search/" + requestBuilder.toString();
     }
 
     public String getRequestStringUnmodified() {
@@ -121,7 +120,6 @@ public class SearchRequest {
             return new SearchRequest(query);
         }
     }
-
 
     //Below are utility methods
 

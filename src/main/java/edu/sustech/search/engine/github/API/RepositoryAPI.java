@@ -25,14 +25,18 @@ public class RepositoryAPI extends RestAPI {
 
     private final Logger logger = LogManager.getLogger(RepositoryAPI.class);
 
-    RepositoryAPI(String OAuthToken) {
-        super(OAuthToken);
+    RepositoryAPI(String... OAuthTokens){
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens[0] != null ? OAuthTokens[0].substring(0, 8) : "<null>") + "...(hidden)");
+    }
 
-        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
+    RepositoryAPI(List<String> OAuthTokens){
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens.get(0) != null ? OAuthTokens.get(0).substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     RepositoryAPI() {
-        this(null);
+        this((String) null);
     }
 
     public List<User> getContributors(Repository r) throws IOException, InterruptedException {
@@ -123,8 +127,22 @@ public class RepositoryAPI extends RestAPI {
         return getHttpResponse(uri);
     }
 
-    public static RepositoryAPI registerAPI(String OAuthToken) {
-        return new RepositoryAPI(OAuthToken);
+    /**
+     * Register a new RepositoryAPI based on OAuthTokens provided
+     * @param OAuthTokens Array of OAuthTokens
+     * @return
+     */
+    public static RepositoryAPI registerAPI(String... OAuthTokens) {
+        return new RepositoryAPI(OAuthTokens);
+    }
+
+    /**
+     * Register a new RepositoryAPI based on OAuthTokens provided
+     * @param OAuthTokens List of OAuthTokens
+     * @return
+     */
+    public static RepositoryAPI registerAPI(List<String> OAuthTokens) {
+        return new RepositoryAPI(OAuthTokens);
     }
 
 }

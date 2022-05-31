@@ -28,13 +28,18 @@ public class SearchAPI extends RestAPI {
     private static String acceptSchema = "application/vnd.github.v3.text-match+json";
     private boolean isProvidingTextMatchEnabled = false;
 
-    SearchAPI(String OAuthToken) {
-        super(OAuthToken);
-        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
+    SearchAPI(String... OAuthTokens) {
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens[0] != null ? OAuthTokens[0].substring(0, 8) : "<null>") + "...(hidden)");
+    }
+
+    SearchAPI(List<String> OAuthTokens) {
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens.get(0) != null ? OAuthTokens.get(0).substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     SearchAPI() {
-        this(null);
+        this((String) null);
     }
 
     /**
@@ -247,27 +252,64 @@ public class SearchAPI extends RestAPI {
      * Please notice that the GitHub REST API may severely restrict your ability to query the result.
      * <br>
      * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
-     * (a typical recommendation might be <code>180000</code>), and run this method in another thread.
+     * (a typical recommendation might be <code>15000</code>), and run this method in another thread.
+     * <br>
+     * If multiple OAuthTokens are used, then the time interval between each request can be noticeably reduced.
      *
      * @param <T>                Result type
      * @param request1           Request (will create another copy)
      * @param targetClazz        Target class for object mapper
-     * @param count              Target Item count. Note that the actual items retrieved might be more
+     * @param count              Target item count. Note that the actual items retrieved might be more
      * @param timeIntervalMillis Preferred time interval between requests
      * @return CodeResult
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws InterruptedException Typically when time interval is interrupted
+     * @throws IOException          Typically when connection between this API and the server fails to establish or accidentally closed.
      */
     @SuppressWarnings("unchecked")
     public <T extends AppendableResult> T searchType(SearchRequest request1, Class<T> targetClazz, int count, long timeIntervalMillis) throws IOException, InterruptedException {
         return (T) searchLoopFetching(request1, s -> convert(s, targetClazz), count, timeIntervalMillis); //It must be T, so no worry.
     }
 
+    /**
+     * This method uses while loop to request for search results.
+     * Please notice that the GitHub REST API may severely restrict your ability to query the result.
+     * <br>
+     * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
+     * (a typical recommendation might be <code>15000</code>), and run this method in another thread.
+     * <br>
+     * If multiple OAuthTokens are used, then the time interval between each request can be noticeably reduced.
+     *
+     * @param request1           Request (will create another copy)
+     * @param p                  A functional interface used to parse the result
+     * @param count              Target item count. Note that the actual items retrieved might be more
+     * @param timeIntervalMillis Preferred time interval between requests
+     * @return Results gathered through loop fetching
+     * @throws InterruptedException Typically when time interval is interrupted
+     * @throws IOException          Typically when connection between this API and the server fails to establish or accidentally closed.
+     */
     public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
         return searchLoopFetching(request1, null, p, count, timeIntervalMillis);
     }
 
 
+    /**
+     * This method uses while loop to request for search results.
+     * Please notice that the GitHub REST API may severely restrict your ability to query the result.
+     * <br>
+     * If too often the secondary rate limit is encountered, please increase the <code>timeIntervalMillis</code>
+     * (a typical recommendation might be <code>15000</code>), and run this method in another thread.
+     * <br>
+     * If multiple OAuthTokens are used, then the time interval between each request can be noticeably reduced.
+     *
+     * @param request1           Request (will create another copy)
+     * @param origin             The origin result that waits to be appended on. If <code>null</code>, then a new empty origin will be created.
+     * @param p                  A functional interface used to parse the result
+     * @param count              Target item count. Note that the actual items retrieved might be more
+     * @param timeIntervalMillis Preferred time interval between requests
+     * @return
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public AppendableResult searchLoopFetching(SearchRequest request1, AppendableResult origin, AppendableResultParser p, int count, long timeIntervalMillis) throws InterruptedException, IOException {
 
         SearchRequest request = new SearchRequest(request1);
@@ -332,6 +374,10 @@ public class SearchAPI extends RestAPI {
         return result;
     }
 
+    /**
+     * Each time a successful response is received from the server, the <code>parse</code> method will be invoked to parse the
+     * raw response body (in <code>String</code>) into a POJO.
+     */
     @FunctionalInterface
     public interface AppendableResultParser {
         AppendableResult parse(String s);
@@ -357,14 +403,28 @@ public class SearchAPI extends RestAPI {
         return response == null ? null : response.body();
     }
 
-    public List<HttpResponse<String>> searchRawLoop(SearchRequest request, int targetPageCount, long timeIntervalMillis) throws IOException, InterruptedException {
+    /**
+     * @param request            Request (will create another copy)
+     * @param targetPageCount    Target page count.
+     * @param timeIntervalMillis Preferred time interval between requests
+     * @return Request result
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public List<HttpResponse<String>> searchLoop(SearchRequest request, int targetPageCount, long timeIntervalMillis) throws IOException, InterruptedException {
         if (isProvidingTextMatchEnabled) {
-            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), acceptSchema, targetPageCount, timeIntervalMillis);
+            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getFullRequestStringWithoutPage())), acceptSchema, targetPageCount, timeIntervalMillis);
         } else {
-            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), targetPageCount, timeIntervalMillis);
+            return getHttpResponseLoopFetching(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getFullRequestStringWithoutPage())), targetPageCount, timeIntervalMillis);
         }
     }
 
+    /**
+     * @param request            Request (will create another copy)
+     * @return Request result
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public HttpResponse<String> search(SearchRequest request) throws IOException, InterruptedException {
         if (isProvidingTextMatchEnabled) {
             return getHttpResponse(URI.create(Transformer.preTransformURI("https://api.github.com/search/" + request.getRequestString())), acceptSchema);
@@ -383,7 +443,23 @@ public class SearchAPI extends RestAPI {
     }
 
 
-    public static SearchAPI registerAPI(String OAuthToken) {
-        return new SearchAPI(OAuthToken);
+    /**
+     * Register a new SearchAPI based on OAuthTokens provided
+     *
+     * @param OAuthTokens Array of OAuthTokens
+     * @return
+     */
+    public static SearchAPI registerAPI(String... OAuthTokens) {
+        return new SearchAPI(OAuthTokens);
+    }
+
+    /**
+     * Register a new SearchAPI based on OAuthTokens provided
+     *
+     * @param OAuthTokens List of OAuthTokens
+     * @return
+     */
+    public static SearchAPI registerAPI(List<String> OAuthTokens) {
+        return new SearchAPI(OAuthTokens);
     }
 }

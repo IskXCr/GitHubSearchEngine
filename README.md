@@ -13,6 +13,9 @@ You can find the related javadoc under /docs inside the repository.
 
 Or you can check [GitHub Search Engine API doc](http://iskxcr.github.io/GitHubSearchEngine/), which is hosted on GitHub.io
 
+## New features
+Now supports querying multiple tokens to maximize the performance.
+
 ## To register the search engine
 
 You need the ```OAuthToken``` to register the engine.

@@ -12,6 +12,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,18 +44,40 @@ public class RestAPI {
      */
     boolean suppressRateError = false;
 
-    final String token;
+    final List<String> tokenList;
+    int tokenCursor;
     HttpClient client;
     final ObjectMapper objectMapper;
 
-    public RestAPI(String OAuthToken) {
-        this.token = OAuthToken;
+    /**
+     * Initialize this API with multiple tokens for querying.
+     * @param OAuthTokens Array containing OAuthTokens.
+     */
+    public RestAPI(String... OAuthTokens) {
+        tokenList = new LinkedList<>();
+        for (String token : OAuthTokens) {
+            addToken(token);
+        }
+        tokenCursor = 0;
+
+        objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
+
+    /**
+     * Initialize this API with multiple tokens for querying.
+     * @param OAuthTokens List containing OAuthTokens.
+     */
+    public RestAPI(List<String> OAuthTokens){
+        tokenList = new LinkedList<>(OAuthTokens);
+        tokenCursor = 0;
+
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     public RestAPI() {
-        this(null);
+        this((String) null);
     }
 
     public String getHttpResponseRaw(URI uri) throws IOException, InterruptedException {
@@ -186,8 +209,8 @@ public class RestAPI {
         uri = URI.create(Transformer.preTransformURI(uri.toString()));
 
         HttpRequest.Builder builder = HttpRequest.newBuilder();
-        if (token != null) {
-            builder.headers("Authorization", "token " + token);
+        if (tokenList.size() != 0) {
+            builder.headers("Authorization", "token " + getNextToken());
         }
         if (acceptSchema == null) {
             acceptSchema = "application/vnd.github.v3+json";
@@ -273,6 +296,29 @@ public class RestAPI {
         return response == null ? null : convert(response.body(), RateLimitResult.class);
     }
 
+    public void addToken(String OAuthToken) {
+        if (!tokenList.contains(OAuthToken)) {
+            tokenList.add(OAuthToken);
+        }
+    }
+
+    public String getNextToken() {
+        if (tokenCursor >= tokenList.size()) {
+            tokenCursor = 0;
+        }
+        return tokenList.get(tokenCursor++);
+    }
+
+    public int getTokenCursor() {
+        return tokenCursor;
+    }
+
+    public void setTokenCursor(int newPosition) {
+        if (newPosition < tokenList.size() && newPosition >= 0) {
+            tokenCursor = newPosition;
+        }
+    }
+
     /**
      * Convert the object using the internal objectMapper created at instantiation.
      *
@@ -323,5 +369,6 @@ public class RestAPI {
         }
         return result;
     }
+
 
 }

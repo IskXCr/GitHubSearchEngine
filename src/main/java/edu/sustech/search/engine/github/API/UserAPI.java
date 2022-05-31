@@ -22,14 +22,18 @@ public class UserAPI extends RestAPI {
 
     private static final Logger logger = LogManager.getLogger(UserAPI.class);
 
-    UserAPI(String OAuthToken) {
-        super(OAuthToken);
+    UserAPI(String... OAuthTokens){
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens[0] != null ? OAuthTokens[0].substring(0, 8) : "<null>") + "...(hidden)");
+    }
 
-        logger.info("Initialized " + (OAuthToken != null ? OAuthToken.substring(0, 8) : "<null>") + "...(hidden)");
+    UserAPI(List<String> OAuthTokens){
+        super(OAuthTokens);
+        logger.info("Initialized " + (OAuthTokens.get(0) != null ? OAuthTokens.get(0).substring(0, 8) : "<null>") + "...(hidden)");
     }
 
     UserAPI() {
-        this(null);
+        this((String) null);
     }
 
     public List<Entry<Repository, Date>> getStarredRepo(String username) throws IOException, InterruptedException {
@@ -91,8 +95,22 @@ public class UserAPI extends RestAPI {
         return getHttpResponse(uri);
     }
 
-    public static UserAPI registerAPI(String OAuthToken) {
-        return new UserAPI(OAuthToken);
+    /**
+     * Register a new UserAPI based on OAuthTokens provided
+     * @param OAuthTokens Arrays of OAuthTokens
+     * @return
+     */
+    public static UserAPI registerAPI(String... OAuthTokens) {
+        return new UserAPI(OAuthTokens);
+    }
+
+    /**
+     * Register a new UserAPI based on OAuthTokens provided
+     * @param OAuthTokens List of OAuthTokens
+     * @return
+     */
+    public static UserAPI registerAPI(List<String> OAuthTokens) {
+        return new UserAPI(OAuthTokens);
     }
 
 }

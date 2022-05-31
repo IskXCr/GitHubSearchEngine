@@ -11,3 +11,4 @@ result2.json
 /target/maven-status
 /target/test-classes
 /.idea/
+/target/
