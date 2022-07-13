@@ -82,15 +82,15 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub SUSTCJavaProj2022-CS209A Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/sustcjavaproj2022-cs209a/GitHubSearchEngine</url>
+            <name>GitHub IskXCr Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/IskXCr/GitHubSearchEngine</url>
         </repository>
     </distributionManagement>
 
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
     </properties>
 
 </project>
